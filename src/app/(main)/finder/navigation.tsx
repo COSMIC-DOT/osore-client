@@ -3,7 +3,7 @@ import SearchIcon from '@/icons/search-icon';
 
 function Navigation() {
   return (
-    <nav className="mx-auto flex h-[48px] w-[95%] items-center justify-between">
+    <nav className="mx-auto flex h-[48px] max-w-[1800px] items-center justify-between">
       <div className="text-xl font-bold">NOTE</div>
       <div className="flex h-[48px] w-[318px] items-center justify-between">
         <button
