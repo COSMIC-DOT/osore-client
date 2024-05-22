@@ -13,7 +13,7 @@ function Profile() {
   );
 
   return (
-    <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full bg-white">
+    <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full bg-[#D9D9D9]">
       <Image className="h-[60px] w-[60px]" src={user.avartar} alt="프로필" width={50} height={50} />
     </div>
   );
