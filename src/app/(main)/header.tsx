@@ -1,9 +1,26 @@
+'use client';
+
 import { Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 import Profile from '@/components/profile';
 
 function Header() {
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      await fetch('/api/logout', {
+        method: 'GET',
+      });
+      router.push('/');
+    } catch (error) {
+      // eslint-disable-next-line
+      console.error(error);
+    }
+  };
+
   return (
     <header className="mx-auto mb-[65px] mt-[45px] flex max-w-[1750px] items-center justify-between">
       <div className="flex h-[47px] w-[223px] items-center justify-between">
@@ -13,6 +30,9 @@ function Header() {
       <Suspense fallback={<div className="h-[60px] w-[60px] rounded-full bg-[#D9D9D9]" />}>
         <Profile />
       </Suspense>
+      <button type="button" onClick={logout}>
+        logout
+      </button>
     </header>
   );
 }
