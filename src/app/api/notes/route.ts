@@ -1,8 +1,7 @@
-import instance from '../instance';
-
-// eslint-disable-next-line
 export async function GET() {
-  const { data } = await instance.get('/mock/notes.json');
+  const data = await fetch('http://localhost:3000/mock/notes.json');
 
-  return Response.json({ data });
+  const { noteList } = await data.json();
+
+  return Response.json({ noteList });
 }

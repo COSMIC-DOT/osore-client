@@ -15,7 +15,11 @@ function NoteList() {
       method: 'GET',
     })
       .then((response) => response.json())
-      .then(({ data }) => data.noteList),
+      .then(({ noteList }) => noteList)
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error:', error);
+      }),
   );
 
   const handlePrevButton = () => {
