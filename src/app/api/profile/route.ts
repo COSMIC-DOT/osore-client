@@ -1,13 +1,10 @@
+import getInstance from '../intance';
+
 export async function GET() {
-  const data = await fetch('http://localhost:8080/api/user', {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const instance = await getInstance();
+  const { data } = await instance.get('/api/user');
 
-  console.log(data);
+  const user = data.result.data;
 
-  return Response.json({ data });
+  return Response.json(user);
 }

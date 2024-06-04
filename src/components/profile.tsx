@@ -5,12 +5,10 @@ import Image from 'next/image';
 
 function Profile() {
   const user = use(
-    fetch('http://localhost:8080/api/user', {
+    fetch('/api/profile', {
       method: 'GET',
-      credentials: 'include',
     })
       .then((response) => response.json())
-      .then(({ result }) => result.data)
       .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error:', error);
