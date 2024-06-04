@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+
 import Navigation from './navigation';
 import NoteList from './note-list';
 
