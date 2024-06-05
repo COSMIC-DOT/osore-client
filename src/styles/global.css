@@ -1,3 +1,109 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Pretendard Variable';
+  src: url('/font/PretendardVariable.woff2') format('woff2');
+}
+
+@layer components {
+  .text-titel1 {
+    font-family: 'Pretendard Variable';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%; /* 60px */
+    letter-spacing: -0.8px;
+  }
+
+  .text-title2 {
+    font-family: 'Pretendard Variable';
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%; /* 42px */
+    letter-spacing: -0.56px;
+  }
+
+  .text-title3 {
+    font-family: 'Pretendard Variable';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%; /* 30px */
+    letter-spacing: -0.4px;
+  }
+
+  .text-title4 {
+    font-family: 'Pretendard Variable';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 30px */
+    letter-spacing: -0.4px;
+  }
+
+  .text-subtitle1 {
+    font-family: 'Pretendard Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 24px */
+    letter-spacing: -0.32px;
+  }
+
+  .text-subtitle2 {
+    font-family: 'Pretendard Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 21px */
+    letter-spacing: -0.28px;
+  }
+
+  .text-body1 {
+    font-family: 'Pretendard Variable';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 30px */
+    letter-spacing: -0.4px;
+  }
+
+  .text-body2 {
+    font-family: 'Pretendard Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 24px */
+    letter-spacing: -0.32px;
+  }
+
+  .text-body3 {
+    font-family: 'Pretendard Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 21px */
+    letter-spacing: -0.28px;
+  }
+
+  .text-button {
+    font-family: 'Pretendard Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%; /* 21px */
+    letter-spacing: -0.28px;
+  }
+
+  .text-caption {
+    font-family: 'Pretendard Variable';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%; /* 18px */
+    letter-spacing: -0.24px;
+  }
+}

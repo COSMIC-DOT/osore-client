@@ -7,7 +7,7 @@ function Header() {
         <Image className="h-[105px] w-[80px]" src="/images/icon.png" alt="아이콘" height={105} width={80} />
         <Image className="h-[60px] w-[328px]" src="/images/logo.png" alt="로고" height={60} width={328} />
       </div>
-      <div className="mt-[15px] text-center text-[28px]">로그인</div>
+      <div className="text-title2 mt-[15px] text-center">로그인</div>
     </header>
   );
 }
