@@ -4,7 +4,7 @@ function GoogleLoginButton() {
   return (
     <button
       type="button"
-      className="flex h-[60px] w-[400px] items-center justify-center gap-[20px] border-[1px] border-black text-[20px]"
+      className="text-body1 flex h-[60px] w-[400px] items-center justify-center gap-[20px] rounded-[24px] bg-white"
     >
       <GoogleIcon />
       Continue with Google
