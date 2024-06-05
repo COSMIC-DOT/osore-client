@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
@@ -9,12 +10,34 @@ import LogoutIcon from '@/icons/logout-icon';
 import Dropdwon from './dropdwon';
 
 function Profile() {
+  const router = useRouter();
   const [user, setUser] = useState({ name: '', avatar: '' });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const dropdwonList = [
-    { id: 1, icon: <ProfileIcon />, text: '마이페이지' },
-    { id: 2, icon: <LogoutIcon />, text: '로그아웃' },
+    {
+      id: 1,
+      icon: <ProfileIcon />,
+      text: '마이페이지',
+      handleClick: () => {
+        // TODO: 마이페이지로 이동
+      },
+    },
+    {
+      id: 2,
+      icon: <LogoutIcon />,
+      text: '로그아웃',
+      handleClick: async () => {
+        try {
+          await fetch('/api/logout', {
+            method: 'GET',
+          });
+          router.push('/');
+        } catch (error) {
+          // eslint-disable-next-line
+          console.error(error);
+        }
+      },
+    },
   ];
 
   useEffect(() => {
