@@ -1,6 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -27,9 +26,7 @@ function Header() {
         <Image className="h-[47px] w-[36px]" src="/images/icon.png" alt="아이콘" height={47} width={36} />
         <Image className="h-[32px] w-[174px]" src="/images/logo.png" alt="로고" height={32} width={174} />
       </div>
-      <Suspense fallback={<div className="h-[60px] w-[60px] rounded-full bg-[#D9D9D9]" />}>
-        <Profile />
-      </Suspense>
+      <Profile />
       <button type="button" onClick={logout}>
         logout
       </button>
