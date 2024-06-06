@@ -26,7 +26,7 @@ export default async function RootLayout({ children, modal }: { children: React.
 
   return (
     <html lang="ko">
-      <body className="flex justify-center">
+      <body className="flex w-[100%] justify-center">
         <div>
           <Header />
           {children}

@@ -56,7 +56,7 @@ function Note({ note }: { note: Notetype }) {
         </div>
       </div>
       <div className="text-subtitle1 flex h-[49px] w-[400px] justify-between">
-        노트 이름
+        {note.title}
         <button type="button" className="h-[32px] w-[32px]" aria-label="노트 설정">
           <MeatballsMenuIcon />
         </button>

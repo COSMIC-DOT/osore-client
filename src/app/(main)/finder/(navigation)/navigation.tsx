@@ -3,7 +3,7 @@ import CreatenoteButton from './create-note-button';
 
 function Navigation() {
   return (
-    <nav className="mb-[32px] flex h-[48px] w-[100%] items-center justify-between px-[80px]">
+    <nav className="mb-[32px] flex h-[48px] min-w-[100vw] items-center justify-between px-[80px]">
       <div className="text-title2">NOTE</div>
       <div className="flex h-[48px] w-[318px] items-center justify-between">
         <button

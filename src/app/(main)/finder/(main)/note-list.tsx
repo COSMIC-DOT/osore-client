@@ -24,7 +24,7 @@ function NoteList() {
   }, []);
 
   return (
-    <main className="flex w-[100%] flex-col px-[80px]">
+    <main className="flex min-h-[100vh] min-w-[100vw] flex-col px-[80px]">
       <div className="flex  flex-wrap gap-[40px]">
         {notes?.map((note: NoteType) => <Note key={note.id} note={note} />)}
       </div>

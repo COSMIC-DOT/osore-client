@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-function Modal({ modal }: { modal: React.ReactNode }) {
+function Modal({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const clickOutside = (event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
@@ -18,7 +18,7 @@ function Modal({ modal }: { modal: React.ReactNode }) {
       tabIndex={0}
       role="button"
     >
-      {modal}
+      {children}
     </div>
   );
 }
