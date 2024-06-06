@@ -13,11 +13,13 @@ import Spiner from '@/components/spiner';
 
 function CreateModal() {
   const router = useRouter();
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const [linkInfo, setLinkInfo] = useState({ branch: [], tag: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
   const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
+  const [selectedLink, setSelectedLink] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
 
@@ -26,7 +28,7 @@ function CreateModal() {
       id: index,
       icon: <TagIcon />,
       text: tag,
-      handleClick: (event: React.MouseEvent<HTMLDivElement>) => {
+      handleClick: (event: React.MouseEvent<HTMLButtonElement>) => {
         const target = event.target as HTMLElement;
         setSelectedTag(target.textContent as string);
         setIsTagDropdownOpen(false);
@@ -40,7 +42,7 @@ function CreateModal() {
       id: index,
       icon: <BranchIcon />,
       text: branch,
-      handleClick: (event: React.MouseEvent<HTMLDivElement>) => {
+      handleClick: (event: React.MouseEvent<HTMLButtonElement>) => {
         const target = event.target as HTMLElement;
         setSelectedBranch(target.textContent as string);
         setIsBranchDropdownOpen(false);
@@ -54,21 +56,30 @@ function CreateModal() {
   };
 
   const toggleBranchDropdown = () => {
-    setIsBranchDropdownOpen(!isBranchDropdownOpen);
+    if (branchDropdownList.length) {
+      setIsBranchDropdownOpen(!isBranchDropdownOpen);
+    }
   };
 
   const toggleTagDropdown = () => {
-    setIsTagDropdownOpen(!isTagDropdownOpen);
+    if (tagDropdownList.length) {
+      setIsTagDropdownOpen(!isTagDropdownOpen);
+    }
   };
 
   const searchLink = async () => {
     try {
+      setIsBranchDropdownOpen(false);
+      setIsTagDropdownOpen(false);
       setIsLoading(true);
-      const response = await fetch(`/api/search-link?url=${urlInputRef.current?.value}`, {
+      const response = await fetch(`/api/note?url=${urlInputRef.current?.value}`, {
         method: 'GET',
       });
       const data = await response.json();
       setIsLoading(false);
+      setSelectedLink(urlInputRef.current?.value as string);
+      setSelectedBranch('');
+      setSelectedTag('');
       if (Object.keys(data).length) {
         setLinkInfo(data);
       } else {
@@ -81,7 +92,29 @@ function CreateModal() {
     }
   };
 
-  const creataNote = async () => {};
+  const creataNote = async () => {
+    if (titleInputRef.current?.value && selectedLink && selectedBranch && selectedTag) {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/note', {
+          method: 'POST',
+          body: JSON.stringify({
+            title: titleInputRef.current?.value,
+            url: selectedLink,
+            tag: selectedTag,
+            branch: selectedBranch,
+          }),
+        });
+        const data = await response.json();
+        console.log(data);
+        setIsLoading(false);
+        router.back();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <Modal>
@@ -100,6 +133,7 @@ function CreateModal() {
               <div className="flex h-[48px] items-center justify-start gap-[40px]">
                 <div className="text-subtitle1 flex h-[45px] items-center">이름</div>
                 <input
+                  ref={titleInputRef}
                   placeholder="노트이름을 입력해주세요."
                   className="text-button h-[48px]  w-[400px] rounded-[16px] bg-[#E9EBEF] px-[20px] py-[12px] text-[#6F717C] placeholder:text-center"
                 />

@@ -2,7 +2,7 @@ interface DropDownListType {
   id: number;
   icon: JSX.Element;
   text: string;
-  handleClick: () => void;
+  handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 function Dropdwon({ dropdownList }: { dropdownList: DropDownListType[] }) {
@@ -12,12 +12,12 @@ function Dropdwon({ dropdownList }: { dropdownList: DropDownListType[] }) {
         {dropdownList.map((item) => (
           <button
             key={item.id}
-            className="flex items-center gap-[8px] px-[20px] py-[12px] text-[14px]"
+            className="flex items-center gap-[8px] px-[20px] py-[12px]"
             type="button"
             onClick={item.handleClick}
           >
             {item.icon}
-            {item.text}
+            <div className="w-[120px] truncate text-left">{item.text}</div>
           </button>
         ))}
       </div>

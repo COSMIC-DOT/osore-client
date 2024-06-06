@@ -17,7 +17,7 @@ function Profile() {
     {
       id: 1,
       icon: <ProfileIcon />,
-      text: '마이페이지',
+      text: '마이페이지마이페이지마이페이지마이페이지마이페이지',
       handleClick: () => {
         // TODO: 마이페이지로 이동
       },
