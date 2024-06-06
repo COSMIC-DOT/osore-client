@@ -26,9 +26,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="ko">
-      <body>
-        <Header />
-        {children}
+      <body className="flex justify-center">
+        <div>
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );
