@@ -13,7 +13,7 @@ function Profile() {
   const router = useRouter();
   const [user, setUser] = useState({ name: '', avatar: '' });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdwonList = [
+  const dropdownList = [
     {
       id: 1,
       icon: <ProfileIcon />,
@@ -79,7 +79,7 @@ function Profile() {
         </div>
       </div>
 
-      {isDropdownOpen && <Dropdwon dropdwonList={dropdwonList} />}
+      {isDropdownOpen && <Dropdwon dropdownList={dropdownList} />}
     </div>
   );
 }

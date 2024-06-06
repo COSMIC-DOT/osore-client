@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Modal from '@/components/modal';
@@ -8,22 +8,84 @@ import CloseIcon from '@/icons/close-icon';
 import TagIcon from '@/icons/tag-icon';
 import BranchIcon from '@/icons/branch-icon';
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
+import Dropdwon from '@/components/dropdwon';
+import Spiner from '@/components/spiner';
 
 function CreateModal() {
   const router = useRouter();
   const urlInputRef = useRef<HTMLInputElement>(null);
+  const [linkInfo, setLinkInfo] = useState({ branch: [], tag: [] });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
+  const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
+  const [selectedTag, setSelectedTag] = useState('');
+  const [selectedBranch, setSelectedBranch] = useState('');
+
+  const tagDropdownList = linkInfo.tag.map((tag, index) => {
+    const dropdownItem = {
+      id: index,
+      icon: <TagIcon />,
+      text: tag,
+      handleClick: (event: React.MouseEvent<HTMLDivElement>) => {
+        const target = event.target as HTMLElement;
+        setSelectedTag(target.textContent as string);
+        setIsTagDropdownOpen(false);
+      },
+    };
+    return dropdownItem;
+  });
+
+  const branchDropdownList = linkInfo.branch.map((branch, index) => {
+    const dropdownItem = {
+      id: index,
+      icon: <BranchIcon />,
+      text: branch,
+      handleClick: (event: React.MouseEvent<HTMLDivElement>) => {
+        const target = event.target as HTMLElement;
+        setSelectedBranch(target.textContent as string);
+        setIsBranchDropdownOpen(false);
+      },
+    };
+    return dropdownItem;
+  });
 
   const closeModal = () => {
     router.back();
   };
 
-  const searchLink = () => {
-    console.log(urlInputRef.current?.value);
+  const toggleBranchDropdown = () => {
+    setIsBranchDropdownOpen(!isBranchDropdownOpen);
   };
+
+  const toggleTagDropdown = () => {
+    setIsTagDropdownOpen(!isTagDropdownOpen);
+  };
+
+  const searchLink = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/search-link?url=${urlInputRef.current?.value}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      setIsLoading(false);
+      if (Object.keys(data).length) {
+        setLinkInfo(data);
+      } else {
+        // eslint-disable-next-line no-alert
+        alert('해당 URL을 찾을 수 없습니다.');
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error: ', error);
+    }
+  };
+
+  const creataNote = async () => {};
 
   return (
     <Modal>
-      <div className="flex h-[450px] w-[649px] flex-col gap-[8px] rounded-[32px] bg-white p-[40px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
+      <div className="relative flex h-[450px] w-[649px] flex-col gap-[8px] rounded-[32px] bg-white p-[40px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
         <div className="flex h-[25px] w-[100%] justify-end">
           <button type="button" onClick={closeModal} aria-label="닫기 버튼">
             <CloseIcon />
@@ -62,30 +124,38 @@ function CreateModal() {
               </div>
 
               <div className="flex h-[40px] gap-[12px] pl-[88px]">
-                <button
-                  type="button"
-                  className="flex h-[40px] w-[168px] items-center justify-between rounded-[20px] bg-[#D9D9D9] pl-[16px] pr-[8px]"
-                >
-                  <div className="text-subtitle1 flex gap-[4px]">
-                    <TagIcon />
-                    태그 선택
-                  </div>
-                  <div className="flex h-[24px] w-[24px] items-center justify-center">
-                    <ArrowDropdownIcon />
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  className="flex h-[40px] w-[168px] items-center justify-between rounded-[20px] bg-[#D9D9D9] pl-[16px] pr-[8px]"
-                >
-                  <div className="text-subtitle1 flex items-center gap-[4px]">
-                    <BranchIcon />
-                    브랜치 선택
-                  </div>
-                  <div className="flex h-[24px] w-[24px] items-center justify-center">
-                    <ArrowDropdownIcon />
-                  </div>
-                </button>
+                <div>
+                  <button
+                    type="button"
+                    className="mb-[8px] flex h-[40px] w-[168px] items-center justify-between rounded-[20px] bg-[#D9D9D9] pl-[16px] pr-[8px]"
+                    onClick={toggleTagDropdown}
+                  >
+                    <div className="text-subtitle1 flex gap-[4px]">
+                      <TagIcon />
+                      {selectedTag || '태그 선택'}
+                    </div>
+                    <div className="flex h-[24px] w-[24px] items-center justify-center">
+                      <ArrowDropdownIcon />
+                    </div>
+                  </button>
+                  {isTagDropdownOpen && <Dropdwon dropdownList={tagDropdownList} />}
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    className="mb-[8px] flex h-[40px] w-[168px] items-center justify-between rounded-[20px] bg-[#D9D9D9] pl-[16px] pr-[8px]"
+                    onClick={toggleBranchDropdown}
+                  >
+                    <div className="text-subtitle1 flex items-center gap-[4px]">
+                      <BranchIcon />
+                      {selectedBranch || '브랜치 선택'}
+                    </div>
+                    <div className="flex h-[24px] w-[24px] items-center justify-center">
+                      <ArrowDropdownIcon />
+                    </div>
+                  </button>
+                  {isBranchDropdownOpen && <Dropdwon dropdownList={branchDropdownList} />}
+                </div>
               </div>
             </div>
           </div>
@@ -93,10 +163,12 @@ function CreateModal() {
           <button
             type="button"
             className="text-button flex h-[48px] w-[100%] items-center justify-center rounded-[16px] bg-[#C5C6CD] px-[24px] py-[12px] text-white"
+            onClick={creataNote}
           >
             생성하기
           </button>
         </div>
+        {isLoading && <Spiner />}
       </div>
     </Modal>
   );
