@@ -1,5 +1,5 @@
 import SearchIcon from '@/icons/search-icon';
-import AddNoteButton from './add-note-button';
+import CreatenoteButton from './create-note-button';
 
 function Navigation() {
   return (
@@ -13,7 +13,7 @@ function Navigation() {
           NOTE 검색
           <SearchIcon />
         </button>
-        <AddNoteButton />
+        <CreatenoteButton />
       </div>
     </nav>
   );
