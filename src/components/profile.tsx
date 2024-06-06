@@ -13,11 +13,11 @@ function Profile() {
   const router = useRouter();
   const [user, setUser] = useState({ name: '', avatar: '' });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdwonList = [
+  const dropdownList = [
     {
       id: 1,
       icon: <ProfileIcon />,
-      text: '마이페이지',
+      text: '마이페이지마이페이지마이페이지마이페이지마이페이지',
       handleClick: () => {
         // TODO: 마이페이지로 이동
       },
@@ -79,7 +79,7 @@ function Profile() {
         </div>
       </div>
 
-      {isDropdownOpen && <Dropdwon dropdwonList={dropdwonList} />}
+      {isDropdownOpen && <Dropdwon dropdownList={dropdownList} />}
     </div>
   );
 }

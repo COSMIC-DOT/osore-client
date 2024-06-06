@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: '오소리',
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
   const cookie = cookies().get('JSESSIONID')?.value;
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/check`, {
     method: 'GET',
@@ -26,9 +26,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="ko">
-      <body>
-        <Header />
-        {children}
+      <body className="flex w-[100%] justify-center">
+        <div>
+          <Header />
+          {children}
+          {modal}
+        </div>
       </body>
     </html>
   );

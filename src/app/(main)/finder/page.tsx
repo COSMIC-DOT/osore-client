@@ -1,5 +1,5 @@
-import Navigation from './navigation';
-import NoteList from './note-list';
+import Navigation from './(navigation)/navigation';
+import NoteList from './(main)/note-list';
 
 export default function Main() {
   return (
