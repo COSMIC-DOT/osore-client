@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import NoteType from '@/types/note-type';
+import noteStore from '@/stores/note-store';
 import Note from './note';
 
 function NoteList() {
-  const [notes, setNotes] = useState<NoteType[] | null>(null);
+  const notes = noteStore((state: { notes: NoteType[] }) => state.notes);
+  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
 
   useEffect(() => {
     (async () => {
@@ -14,8 +16,9 @@ function NoteList() {
         const response = await fetch('/api/notes', {
           method: 'GET',
         });
-        const { noteList } = await response.json();
-        setNotes(noteList);
+
+        const data = await response.json();
+        setNotes(data);
       } catch (error) {
         // eslint-disable-next-line
         console.error(error);
