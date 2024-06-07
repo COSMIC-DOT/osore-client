@@ -1,13 +1,10 @@
+import getInstance from '../intance';
+
 export async function GET() {
-  const data = await fetch('http://localhost:3000/mock/notes.json', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-cache',
-  });
+  const instance = await getInstance();
+  const { data } = await instance.get('/api/notes');
 
-  const { noteList } = await data.json();
+  const noteList = data.result.data.list || [];
 
-  return Response.json({ noteList });
+  return Response.json(noteList);
 }
