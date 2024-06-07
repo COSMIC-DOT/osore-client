@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -6,9 +7,34 @@ import MeatballsMenuIcon from '@/icons/meatballs-menu-icon';
 import PeopleIcon from '@/icons/people-icon';
 import StarIcon from '@/icons/star-icon';
 import ForkIcon from '@/icons/fork-icon';
+import Dropdwon from '@/components/dropdwon';
 
 function Note({ note }: { note: Notetype }) {
   const router = useRouter();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const noteDropdwonList = [
+    {
+      id: 1,
+      icon: <div />,
+      text: '수정하기',
+      handleClick: () => {
+        // TODO: 노트 수정하기
+      },
+    },
+    {
+      id: 2,
+      icon: <div />,
+      text: '삭제하기',
+      warning: true,
+      handleClick: () => {
+        // TODO: 노트 삭제하기
+      },
+    },
+  ];
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   return (
     <div className="flex h-[335px] w-[400px] flex-col justify-between">
@@ -57,9 +83,17 @@ function Note({ note }: { note: Notetype }) {
       </div>
       <div className="text-subtitle1 flex h-[49px] w-[400px] justify-between">
         {note.title}
-        <button type="button" className="h-[32px] w-[32px]" aria-label="노트 설정">
-          <MeatballsMenuIcon />
-        </button>
+        <div>
+          <button
+            type="button"
+            className="flex h-[32px] w-[160px] justify-end"
+            onClick={toggleDropdown}
+            aria-label="노트 설정"
+          >
+            <MeatballsMenuIcon />
+          </button>
+          {isDropdownOpen && <Dropdwon dropdownList={noteDropdwonList} />}
+        </div>
       </div>
     </div>
   );
