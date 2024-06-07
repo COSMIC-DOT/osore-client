@@ -10,6 +10,8 @@ import BranchIcon from '@/icons/branch-icon';
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
 import Dropdwon from '@/components/dropdwon';
 import Spiner from '@/components/spiner';
+import noteStore from '@/stores/note-store';
+import Notetype from '@/types/note-type';
 
 function CreateModal() {
   const router = useRouter();
@@ -22,6 +24,7 @@ function CreateModal() {
   const [selectedLink, setSelectedLink] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
+  const setNotes = noteStore((state: { setNotes: (notes: Notetype[]) => void }) => state.setNotes);
 
   const tagDropdownList = linkInfo.tag.map((tag, index) => {
     const dropdownItem = {
@@ -106,7 +109,7 @@ function CreateModal() {
           }),
         });
         const data = await response.json();
-        console.log(data);
+        setNotes(data);
         setIsLoading(false);
         router.back();
       } catch (error) {

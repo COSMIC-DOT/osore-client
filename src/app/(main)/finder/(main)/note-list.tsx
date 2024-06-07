@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import NoteType from '@/types/note-type';
+import noteStore from '@/stores/note-store';
 import Note from './note';
 
 function NoteList() {
-  const [notes, setNotes] = useState<NoteType[]>([]);
+  const notes = noteStore((state: { notes: NoteType[] }) => state.notes);
+  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
 
   useEffect(() => {
     (async () => {
