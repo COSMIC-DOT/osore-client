@@ -8,10 +8,12 @@ import PeopleIcon from '@/icons/people-icon';
 import StarIcon from '@/icons/star-icon';
 import ForkIcon from '@/icons/fork-icon';
 import Dropdwon from '@/components/dropdwon';
+import noteStore from '@/stores/note-store';
 
 function Note({ note }: { note: Notetype }) {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const setNotes = noteStore((state: { setNotes: (notes: Notetype[]) => void }) => state.setNotes);
   const noteDropdwonList = [
     {
       id: 1,
@@ -26,8 +28,17 @@ function Note({ note }: { note: Notetype }) {
       icon: <div />,
       text: '삭제하기',
       warning: true,
-      handleClick: () => {
-        // TODO: 노트 삭제하기
+      handleClick: async () => {
+        try {
+          const response = await fetch(`/api/note?noteId=${note.id}`, {
+            method: 'DELETE',
+          });
+          const data = await response.json();
+          setNotes(data);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(error);
+        }
       },
     },
   ];
