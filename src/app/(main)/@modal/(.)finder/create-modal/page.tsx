@@ -169,7 +169,7 @@ function CreateModal() {
                   >
                     <div className="text-subtitle1 flex gap-[4px]">
                       <TagIcon />
-                      {selectedTag || '태그 선택'}
+                      <div className="w-[100px] truncate text-left">{selectedTag || '태그 선택'}</div>
                     </div>
                     <div className="flex h-[24px] w-[24px] items-center justify-center">
                       <ArrowDropdownIcon />
@@ -185,7 +185,7 @@ function CreateModal() {
                   >
                     <div className="text-subtitle1 flex items-center gap-[4px]">
                       <BranchIcon />
-                      {selectedBranch || '브랜치 선택'}
+                      <div className="w-[100px] truncate text-left">{selectedBranch || '브랜치 선택'}</div>
                     </div>
                     <div className="flex h-[24px] w-[24px] items-center justify-center">
                       <ArrowDropdownIcon />

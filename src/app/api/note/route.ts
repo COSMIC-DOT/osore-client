@@ -20,3 +20,14 @@ export async function POST(request: Request) {
 
   return Response.json(noteList);
 }
+
+export async function DELETE(request: Request) {
+  const instance = await getInstance();
+  const { searchParams } = new URL(request.url);
+  const noteId = searchParams.get('noteId');
+  const { data } = await instance.delete(`/api/note?id=${noteId}`);
+
+  const noteList = data.result.data.list || [];
+
+  return Response.json(noteList);
+}
