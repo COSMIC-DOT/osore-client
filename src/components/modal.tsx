@@ -12,7 +12,7 @@ function Modal({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className="fixed left-0 top-0 z-10 flex h-[100%] w-[100%] items-center justify-center"
+      className="fixed left-0 top-0 z-30 flex h-[100%] w-[100%] items-center justify-center"
       onClick={clickOutside}
       onKeyDown={() => {}}
       tabIndex={0}

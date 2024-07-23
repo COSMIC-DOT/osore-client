@@ -138,7 +138,7 @@ function CreateModal() {
                 <input
                   ref={titleInputRef}
                   placeholder="노트이름을 입력해주세요."
-                  className="text-button h-[48px]  w-[400px] rounded-[16px] bg-[#E9EBEF] px-[20px] py-[12px] text-[#6F717C] placeholder:text-center"
+                  className="text-button bg-gray1  h-[48px] w-[400px] rounded-[16px] px-[20px] py-[12px] text-[#6F717C] placeholder:text-center"
                 />
               </div>
 
@@ -148,11 +148,11 @@ function CreateModal() {
                   <input
                     ref={urlInputRef}
                     placeholder="URL 주소를 입력해주세요."
-                    className="text-button h-[48px]  w-[400px] rounded-[16px] bg-[#E9EBEF] px-[20px] py-[12px] text-[#6F717C] placeholder:text-center"
+                    className="text-button bg-gray1  text-gray4 h-[48px] w-[400px] rounded-[16px] px-[20px] py-[12px] placeholder:text-center"
                   />
                   <button
                     type="button"
-                    className="text-button h-[48px] w-[72px] rounded-[16px] bg-[#C5C6CD] text-white"
+                    className="text-button bg-gray2 h-[48px] w-[72px] rounded-[16px] text-white"
                     onClick={searchLink}
                   >
                     확인
@@ -164,7 +164,7 @@ function CreateModal() {
                 <div>
                   <button
                     type="button"
-                    className="mb-[8px] flex h-[40px] w-[168px] items-center justify-between rounded-[20px] bg-[#D9D9D9] pl-[16px] pr-[8px]"
+                    className="bg-gray1 mb-[8px] flex h-[40px] w-[168px] items-center justify-between rounded-[20px] pl-[16px] pr-[8px]"
                     onClick={toggleTagDropdown}
                   >
                     <div className="text-subtitle1 flex gap-[4px]">
@@ -180,7 +180,7 @@ function CreateModal() {
                 <div>
                   <button
                     type="button"
-                    className="mb-[8px] flex h-[40px] w-[168px] items-center justify-between rounded-[20px] bg-[#D9D9D9] pl-[16px] pr-[8px]"
+                    className="bg-gray1 mb-[8px] flex h-[40px] w-[168px] items-center justify-between rounded-[20px] pl-[16px] pr-[8px]"
                     onClick={toggleBranchDropdown}
                   >
                     <div className="text-subtitle1 flex items-center gap-[4px]">
@@ -199,7 +199,7 @@ function CreateModal() {
 
           <button
             type="button"
-            className="text-button flex h-[48px] w-[100%] items-center justify-center rounded-[16px] bg-[#C5C6CD] px-[24px] py-[12px] text-white"
+            className="text-button bg-gray2 flex h-[48px] w-[100%] items-center justify-center rounded-[16px] px-[24px] py-[12px] text-white"
             onClick={creataNote}
           >
             생성하기

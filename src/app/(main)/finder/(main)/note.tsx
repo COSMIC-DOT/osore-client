@@ -56,7 +56,13 @@ function Note({ note }: { note: Notetype }) {
         tabIndex={0}
         role="button"
       >
-        <Image className="absolute h-[270px] w-[400px]" src="/images/folder.png" alt="폴더" height={270} width={400} />
+        <Image
+          className="absolute h-[270px] w-[400px] drop-shadow-[0_0_30px_rgba(0,0,0,0.05)]"
+          src="/images/folder.png"
+          alt="폴더"
+          height={270}
+          width={400}
+        />
         <div className="absolute z-10 flex h-[270px] w-[400px] flex-col justify-between p-[24px]">
           <div className="flex h-[40px] w-[40px] items-center justify-center overflow-hidden rounded-full bg-[#D9D9D9]">
             <Image className="h-[40px] w-[40px]" src={note.avatar} alt="저장소 프로필" height={40} width={40} />
@@ -92,8 +98,11 @@ function Note({ note }: { note: Notetype }) {
           </div>
         </div>
       </div>
-      <div className="text-subtitle1 flex h-[49px] w-[400px] justify-between">
-        {note.title}
+      <div className="flex h-[49px] w-[400px] justify-between">
+        <div className="h-[49px] w-[131px]">
+          <div className="text-subtitle1">{note.title}</div>
+          <div className="text-body3 text-gray4">Viewed 2 months ago</div>
+        </div>
         <div>
           <button
             type="button"

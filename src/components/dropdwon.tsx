@@ -18,7 +18,7 @@ function Dropdwon({ dropdownList }: { dropdownList: DropDownListType[] }) {
             onClick={item.handleClick}
           >
             {item.icon}
-            <div className={`w-[120px] truncate text-left ${item.warning && 'text-[#FF5F4A]'}`}>{item.text}</div>
+            <div className={`w-[120px] truncate text-left ${item.warning && 'text-error'}`}>{item.text}</div>
           </button>
         ))}
       </div>

@@ -3,7 +3,7 @@ import NoteList from './(main)/note-list';
 
 export default function Main() {
   return (
-    <div className="bg-[#F7F8F9] pt-[40px]">
+    <div className="bg-gray0 pt-[40px]">
       <Navigation />
       <NoteList />
     </div>
