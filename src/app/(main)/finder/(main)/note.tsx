@@ -80,29 +80,51 @@ function Note({ note }: { note: Notetype }) {
             <Image className="h-[40px] w-[40px]" src={note.avatar} alt="저장소 프로필" height={40} width={40} />
           </div>
           <div className="flex h-[158px] w-[352px] flex-col justify-between">
-            <div className="flex h-[58px] flex-col justify-between">
-              <div className="text-title4">{note.repository}</div>
-              <div className="text-body2">{note.description}</div>
+            <div className="flex flex-col">
+              <div className="text-title4 truncate">{note.repository}</div>
+              <div className="text-body2 line-clamp-3">{note.description}</div>
             </div>
-            <div className="flex h-[43px] gap-[24px]">
-              <div className="flex gap-[5px]">
+
+            <div className="flex h-[43px] gap-[32px]">
+              <div className="flex w-[92px] gap-[5px]">
                 <PeopleIcon />
                 <div className="flex flex-col gap-[4px]">
-                  <div className="text-subtitle2">{note.contributors}</div>
+                  <div className="text-subtitle2">
+                    {/* eslint-disable-next-line no-nested-ternary */}
+                    {+note.contributors < 1000
+                      ? note.contributors
+                      : +note.contributors < 1000000
+                        ? `${Math.floor(+note.contributors / 1000)}K`
+                        : `${Math.floor(+note.contributors / 1000000)}M`}
+                  </div>
                   <div className="text-caption">Contributors</div>
                 </div>
               </div>
-              <div className="flex gap-[5px]">
+              <div className="flex w-[55px] gap-[5px]">
                 <StarIcon />
                 <div className="flex flex-col gap-[4px]">
-                  <div className="text-subtitle2">{note.stars}</div>
+                  <div className="text-subtitle2">
+                    {/* eslint-disable-next-line no-nested-ternary */}
+                    {+note.stars < 1000
+                      ? note.stars
+                      : +note.stars < 1000000
+                        ? `${Math.floor(+note.stars / 1000)}K`
+                        : `${Math.floor(+note.stars / 1000000)}M`}
+                  </div>
                   <div className="text-caption">Stars</div>
                 </div>
               </div>
-              <div className="flex gap-[5px]">
+              <div className="flex w-[54px] gap-[5px]">
                 <ForkIcon />
                 <div className="flex flex-col gap-[4px]">
-                  <div className="text-subtitle2">{note.forks}</div>
+                  <div className="text-subtitle2">
+                    {/* eslint-disable-next-line no-nested-ternary */}
+                    {+note.forks < 1000
+                      ? note.forks
+                      : +note.forks < 1000000
+                        ? `${Math.floor(+note.forks / 1000)}K`
+                        : `${Math.floor(+note.forks / 1000000)}M`}
+                  </div>
                   <div className="text-caption">Forks</div>
                 </div>
               </div>
@@ -111,8 +133,8 @@ function Note({ note }: { note: Notetype }) {
         </div>
       </div>
       <div className="flex h-[49px] w-[400px] justify-between">
-        <div className="h-[49px] w-[131px]">
-          <div className="text-subtitle1">{note.title}</div>
+        <div className="h-[49px] w-[240px]">
+          <div className="text-subtitle1 truncate">{note.title}</div>
           <div className="text-body3 text-gray4">Viewed 2 months ago</div>
         </div>
         <div>
