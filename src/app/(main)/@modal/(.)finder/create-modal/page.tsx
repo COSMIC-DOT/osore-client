@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Modal from '@/components/modal';
@@ -16,6 +16,8 @@ import Notetype from '@/types/note-type';
 
 function CreateModal() {
   const router = useRouter();
+  const branchDropdownref = useRef<HTMLDivElement>(null);
+  const tagDropdownref = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const [linkInfo, setLinkInfo] = useState({ branch: [], tag: [] });
@@ -57,11 +59,43 @@ function CreateModal() {
     router.back();
   };
 
+  useEffect(() => {
+    const branchDropdownOutsideClick = (event: MouseEvent) => {
+      if (
+        isBranchDropdownOpen &&
+        branchDropdownref.current &&
+        !branchDropdownref.current.contains(event.target as Node)
+      ) {
+        setIsBranchDropdownOpen(!isBranchDropdownOpen);
+      }
+    };
+
+    document.addEventListener('click', branchDropdownOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', branchDropdownOutsideClick);
+    };
+  }, [isBranchDropdownOpen]);
+
   const toggleBranchDropdown = () => {
     if (branchDropdownList.length) {
       setIsBranchDropdownOpen(!isBranchDropdownOpen);
     }
   };
+
+  useEffect(() => {
+    const tagDropdownOutsideClick = (event: MouseEvent) => {
+      if (isTagDropdownOpen && tagDropdownref.current && !tagDropdownref.current.contains(event.target as Node)) {
+        setIsTagDropdownOpen(!isTagDropdownOpen);
+      }
+    };
+
+    document.addEventListener('click', tagDropdownOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', tagDropdownOutsideClick);
+    };
+  }, [isTagDropdownOpen]);
 
   const toggleTagDropdown = () => {
     if (tagDropdownList.length) {
@@ -181,7 +215,9 @@ function CreateModal() {
                       {isTagDropdownOpen ? <ArrowDropupIcon /> : <ArrowDropdownIcon />}
                     </div>
                   </button>
-                  {isTagDropdownOpen && <Dropdwon dropdownList={tagDropdownList} border={false} />}
+                  {isTagDropdownOpen && (
+                    <Dropdwon dropdownList={tagDropdownList} dropdownRef={tagDropdownref} border={false} />
+                  )}
                 </div>
               </div>
 
@@ -203,7 +239,9 @@ function CreateModal() {
                       {isBranchDropdownOpen ? <ArrowDropupIcon /> : <ArrowDropdownIcon />}
                     </div>
                   </button>
-                  {isBranchDropdownOpen && <Dropdwon dropdownList={branchDropdownList} border={false} />}
+                  {isBranchDropdownOpen && (
+                    <Dropdwon dropdownList={branchDropdownList} dropdownRef={branchDropdownref} border={false} />
+                  )}
                 </div>
               </div>
             </div>

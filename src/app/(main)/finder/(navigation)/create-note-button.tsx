@@ -14,7 +14,7 @@ function CreateNoteButton() {
   return (
     <button
       type="button"
-      className="bg-primary flex h-[48px] w-[135px] items-center justify-center gap-[8px] rounded-[16px] px-[20px] py-[12px]"
+      className="flex h-[48px] w-[135px] items-center justify-center gap-[8px] rounded-[16px] bg-primary px-[20px] py-[12px] hover:bg-primary_dark"
       onClick={openCreateNoteModal}
     >
       <PlusIcon />

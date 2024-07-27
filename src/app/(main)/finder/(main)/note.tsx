@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -12,12 +12,12 @@ import noteStore from '@/stores/note-store';
 
 function Note({ note }: { note: Notetype }) {
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const setNotes = noteStore((state: { setNotes: (notes: Notetype[]) => void }) => state.setNotes);
   const noteDropdwonList = [
     {
       id: 1,
-      icon: <div />,
       text: '수정하기',
       handleClick: () => {
         // TODO: 노트 수정하기
@@ -25,9 +25,7 @@ function Note({ note }: { note: Notetype }) {
     },
     {
       id: 2,
-      icon: <div />,
       text: '삭제하기',
-      warning: true,
       handleClick: async () => {
         try {
           const response = await fetch(`/api/note?noteId=${note.id}`, {
@@ -42,6 +40,20 @@ function Note({ note }: { note: Notetype }) {
       },
     },
   ];
+
+  useEffect(() => {
+    const dropdownOutsideClick = (event: MouseEvent) => {
+      if (isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(!isDropdownOpen);
+      }
+    };
+
+    document.addEventListener('click', dropdownOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', dropdownOutsideClick);
+    };
+  }, [isDropdownOpen]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -112,7 +124,7 @@ function Note({ note }: { note: Notetype }) {
           >
             <MeatballsMenuIcon />
           </button>
-          {isDropdownOpen && <Dropdwon dropdownList={noteDropdwonList} />}
+          {isDropdownOpen && <Dropdwon dropdownList={noteDropdwonList} dropdownRef={dropdownRef} border={false} />}
         </div>
       </div>
     </div>

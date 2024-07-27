@@ -8,7 +8,7 @@ function NoteSearchInput() {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!cancelRef.current) return;
 
     if (!event.target.value) {
