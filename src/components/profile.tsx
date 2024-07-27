@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
+import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
 import ProfileIcon from '@/icons/profile-icon';
 import LogoutIcon from '@/icons/logout-icon';
 import Dropdwon from './dropdwon';
@@ -26,6 +27,7 @@ function Profile() {
       id: 2,
       icon: <LogoutIcon />,
       text: '로그아웃',
+      warning: true,
       handleClick: async () => {
         try {
           await fetch('/api/logout', {
@@ -74,12 +76,12 @@ function Profile() {
         <div className="text-body2 flex h-[60px] items-center justify-center">
           {user.name}
           <div className="flex h-[24px] w-[24px] items-center justify-center">
-            <ArrowDropdownIcon />
+            {isDropdownOpen ? <ArrowDropupIcon /> : <ArrowDropdownIcon />}
           </div>
         </div>
       </div>
 
-      {isDropdownOpen && <Dropdwon dropdownList={dropdownList} />}
+      {isDropdownOpen && <Dropdwon dropdownList={dropdownList} border />}
     </div>
   );
 }

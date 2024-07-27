@@ -16,7 +16,7 @@ module.exports = {
       secondary: '#00E2D9',
       secondary_light: '#A8F1EE',
       secondary_dark: '#00B0A9',
-      error: 'FF5F4A',
+      error: '#FF5F4A',
     },
     extend: {},
   },
