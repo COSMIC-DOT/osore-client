@@ -1,23 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
+import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
 import ProfileIcon from '@/icons/profile-icon';
 import LogoutIcon from '@/icons/logout-icon';
 import Dropdwon from './dropdwon';
 
 function Profile() {
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState({ name: '', avatar: '' });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownList = [
     {
       id: 1,
       icon: <ProfileIcon />,
-      text: '마이페이지마이페이지마이페이지마이페이지마이페이지',
+      text: '마이페이지',
       handleClick: () => {
         // TODO: 마이페이지로 이동
       },
@@ -26,6 +28,7 @@ function Profile() {
       id: 2,
       icon: <LogoutIcon />,
       text: '로그아웃',
+      warning: true,
       handleClick: async () => {
         try {
           await fetch('/api/logout', {
@@ -55,6 +58,20 @@ function Profile() {
     })();
   }, []);
 
+  useEffect(() => {
+    const dropdownOutsideClick = (event: MouseEvent) => {
+      if (isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(!isDropdownOpen);
+      }
+    };
+
+    document.addEventListener('click', dropdownOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', dropdownOutsideClick);
+    };
+  }, [isDropdownOpen]);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -74,12 +91,12 @@ function Profile() {
         <div className="text-body2 flex h-[60px] items-center justify-center">
           {user.name}
           <div className="flex h-[24px] w-[24px] items-center justify-center">
-            <ArrowDropdownIcon />
+            {isDropdownOpen ? <ArrowDropupIcon /> : <ArrowDropdownIcon />}
           </div>
         </div>
       </div>
 
-      {isDropdownOpen && <Dropdwon dropdownList={dropdownList} />}
+      {isDropdownOpen && <Dropdwon dropdownList={dropdownList} dropdownRef={dropdownRef} border />}
     </div>
   );
 }

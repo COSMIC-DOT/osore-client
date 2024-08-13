@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -12,12 +12,12 @@ import noteStore from '@/stores/note-store';
 
 function Note({ note }: { note: Notetype }) {
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const setNotes = noteStore((state: { setNotes: (notes: Notetype[]) => void }) => state.setNotes);
   const noteDropdwonList = [
     {
       id: 1,
-      icon: <div />,
       text: '수정하기',
       handleClick: () => {
         // TODO: 노트 수정하기
@@ -25,9 +25,7 @@ function Note({ note }: { note: Notetype }) {
     },
     {
       id: 2,
-      icon: <div />,
       text: '삭제하기',
-      warning: true,
       handleClick: async () => {
         try {
           const response = await fetch(`/api/note?noteId=${note.id}`, {
@@ -43,6 +41,20 @@ function Note({ note }: { note: Notetype }) {
     },
   ];
 
+  useEffect(() => {
+    const dropdownOutsideClick = (event: MouseEvent) => {
+      if (isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(!isDropdownOpen);
+      }
+    };
+
+    document.addEventListener('click', dropdownOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', dropdownOutsideClick);
+    };
+  }, [isDropdownOpen]);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -56,35 +68,63 @@ function Note({ note }: { note: Notetype }) {
         tabIndex={0}
         role="button"
       >
-        <Image className="absolute h-[270px] w-[400px]" src="/images/folder.png" alt="폴더" height={270} width={400} />
+        <Image
+          className="absolute h-[270px] w-[400px] drop-shadow-[0_0_30px_rgba(0,0,0,0.05)]"
+          src="/images/folder.png"
+          alt="폴더"
+          height={270}
+          width={400}
+        />
         <div className="absolute z-10 flex h-[270px] w-[400px] flex-col justify-between p-[24px]">
           <div className="flex h-[40px] w-[40px] items-center justify-center overflow-hidden rounded-full bg-[#D9D9D9]">
             <Image className="h-[40px] w-[40px]" src={note.avatar} alt="저장소 프로필" height={40} width={40} />
           </div>
           <div className="flex h-[158px] w-[352px] flex-col justify-between">
-            <div className="flex h-[58px] flex-col justify-between">
-              <div className="text-title4">{note.repository}</div>
-              <div className="text-body2">{note.description}</div>
+            <div className="flex flex-col">
+              <div className="text-title4 truncate">{note.repository}</div>
+              <div className="text-body2 line-clamp-3">{note.description}</div>
             </div>
-            <div className="flex h-[43px] gap-[24px]">
-              <div className="flex gap-[5px]">
+
+            <div className="flex h-[43px] gap-[32px]">
+              <div className="flex w-[92px] gap-[5px]">
                 <PeopleIcon />
                 <div className="flex flex-col gap-[4px]">
-                  <div className="text-subtitle2">{note.contributors}</div>
+                  <div className="text-subtitle2">
+                    {/* eslint-disable-next-line no-nested-ternary */}
+                    {+note.contributors < 1000
+                      ? note.contributors
+                      : +note.contributors < 1000000
+                        ? `${Math.floor(+note.contributors / 1000)}K`
+                        : `${Math.floor(+note.contributors / 1000000)}M`}
+                  </div>
                   <div className="text-caption">Contributors</div>
                 </div>
               </div>
-              <div className="flex gap-[5px]">
+              <div className="flex w-[55px] gap-[5px]">
                 <StarIcon />
                 <div className="flex flex-col gap-[4px]">
-                  <div className="text-subtitle2">{note.stars}</div>
+                  <div className="text-subtitle2">
+                    {/* eslint-disable-next-line no-nested-ternary */}
+                    {+note.stars < 1000
+                      ? note.stars
+                      : +note.stars < 1000000
+                        ? `${Math.floor(+note.stars / 1000)}K`
+                        : `${Math.floor(+note.stars / 1000000)}M`}
+                  </div>
                   <div className="text-caption">Stars</div>
                 </div>
               </div>
-              <div className="flex gap-[5px]">
+              <div className="flex w-[54px] gap-[5px]">
                 <ForkIcon />
                 <div className="flex flex-col gap-[4px]">
-                  <div className="text-subtitle2">{note.forks}</div>
+                  <div className="text-subtitle2">
+                    {/* eslint-disable-next-line no-nested-ternary */}
+                    {+note.forks < 1000
+                      ? note.forks
+                      : +note.forks < 1000000
+                        ? `${Math.floor(+note.forks / 1000)}K`
+                        : `${Math.floor(+note.forks / 1000000)}M`}
+                  </div>
                   <div className="text-caption">Forks</div>
                 </div>
               </div>
@@ -92,8 +132,11 @@ function Note({ note }: { note: Notetype }) {
           </div>
         </div>
       </div>
-      <div className="text-subtitle1 flex h-[49px] w-[400px] justify-between">
-        {note.title}
+      <div className="flex h-[49px] w-[400px] justify-between">
+        <div className="h-[49px] w-[240px]">
+          <div className="text-subtitle1 truncate">{note.title}</div>
+          <div className="text-body3 text-gray4">Viewed 2 months ago</div>
+        </div>
         <div>
           <button
             type="button"
@@ -103,7 +146,7 @@ function Note({ note }: { note: Notetype }) {
           >
             <MeatballsMenuIcon />
           </button>
-          {isDropdownOpen && <Dropdwon dropdownList={noteDropdwonList} />}
+          {isDropdownOpen && <Dropdwon dropdownList={noteDropdwonList} dropdownRef={dropdownRef} border={false} />}
         </div>
       </div>
     </div>

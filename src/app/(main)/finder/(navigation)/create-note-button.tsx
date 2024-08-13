@@ -14,11 +14,11 @@ function CreateNoteButton() {
   return (
     <button
       type="button"
-      className="text-button flex h-[48px] w-[159px] items-center justify-center gap-3 rounded-[16px] border-[1px] border-black"
+      className="flex h-[48px] w-[135px] items-center justify-center gap-[8px] rounded-[16px] bg-primary px-[20px] py-[12px] hover:bg-primary_dark"
       onClick={openCreateNoteModal}
     >
-      NOTE 추가하기
       <PlusIcon />
+      <div className="text-button h-[19px] text-white">NOTE 추가</div>
     </button>
   );
 }
