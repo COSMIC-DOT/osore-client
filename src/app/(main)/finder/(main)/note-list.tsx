@@ -13,6 +13,8 @@ function NoteList() {
     (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
   );
 
+  console.log('aaa');
+
   useEffect(() => {
     (async () => {
       try {
@@ -28,7 +30,7 @@ function NoteList() {
         console.error(error);
       }
     })();
-  }, []);
+  }, [setNotes, setSearchedNotes]);
 
   return (
     <main className="flex min-h-[100vh] min-w-[100vw] flex-col px-[80px]">
