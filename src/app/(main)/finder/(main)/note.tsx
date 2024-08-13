@@ -15,6 +15,7 @@ function Note({ note }: { note: Notetype }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const setNotes = noteStore((state: { setNotes: (notes: Notetype[]) => void }) => state.setNotes);
+
   const noteDropdwonList = [
     {
       id: 1,

@@ -1,4 +1,4 @@
-export default interface Notetype {
+export default interface NoteType {
   id: number;
   title: string;
   avatar: string;
