@@ -36,16 +36,15 @@ function NoteList() {
   }, [setNotes, setSearchedNotes]);
 
   return (
-    <main className="flex min-h-[100vh] min-w-[100vw] flex-col px-[80px]">
-      {isLoading ? (
-        <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center">
+    <main className="relative flex min-h-[calc(100vh-240px)] min-w-[100vw] flex-col px-[80px]">
+      {isLoading && (
+        <div className="absolute left-0 top-0 z-50 flex h-full w-full items-center justify-center">
           <Spiner />
         </div>
-      ) : (
-        <div className="flex flex-wrap gap-[40px]">
-          {searchedNotes?.map((note: NoteType) => <Note key={note.id} note={note} />)}
-        </div>
       )}
+      <div className="flex flex-wrap gap-[40px]">
+        {searchedNotes?.map((note: NoteType) => <Note key={note.id} note={note} setIsLoading={setIsLoading} />)}
+      </div>
     </main>
   );
 }

@@ -37,6 +37,7 @@ function NoteSearchInput() {
     inputRef.current.value = '';
     cancelRef.current.style.setProperty('display', 'none');
     setSearchedNotes(notes);
+    setSearchWord('');
   };
 
   return (

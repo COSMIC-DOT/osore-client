@@ -11,7 +11,7 @@ import Dropdwon from '@/components/dropdwon';
 import noteStore from '@/stores/note-store';
 import searchStore from '@/stores/search-store';
 
-function Note({ note }: { note: NoteType }) {
+function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading: boolean) => void }) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -34,6 +34,8 @@ function Note({ note }: { note: NoteType }) {
       text: '삭제하기',
       handleClick: async () => {
         try {
+          setIsLoading(true);
+          setIsDropdownOpen(false);
           const response = await fetch(`/api/note?noteId=${note.id}`, {
             method: 'DELETE',
           });
@@ -46,6 +48,8 @@ function Note({ note }: { note: NoteType }) {
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error(error);
+        } finally {
+          setIsLoading(false);
         }
       },
     },
