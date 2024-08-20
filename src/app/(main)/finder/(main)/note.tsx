@@ -2,19 +2,25 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-import Notetype from '@/types/note-type';
+import NoteType from '@/types/note-type';
 import MeatballsMenuIcon from '@/icons/meatballs-menu-icon';
 import PeopleIcon from '@/icons/people-icon';
 import StarIcon from '@/icons/star-icon';
 import ForkIcon from '@/icons/fork-icon';
 import Dropdwon from '@/components/dropdwon';
 import noteStore from '@/stores/note-store';
+import searchStore from '@/stores/search-store';
 
-function Note({ note }: { note: Notetype }) {
+function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading: boolean) => void }) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const setNotes = noteStore((state: { setNotes: (notes: Notetype[]) => void }) => state.setNotes);
+  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
+  const searchedNotes = searchStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
+  const setSearchedNotes = searchStore(
+    (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
+  );
+
   const noteDropdwonList = [
     {
       id: 1,
@@ -28,14 +34,22 @@ function Note({ note }: { note: Notetype }) {
       text: '삭제하기',
       handleClick: async () => {
         try {
+          setIsLoading(true);
+          setIsDropdownOpen(false);
           const response = await fetch(`/api/note?noteId=${note.id}`, {
             method: 'DELETE',
           });
           const data = await response.json();
           setNotes(data);
+          const newSearchedNotes = data.filter((item: NoteType) =>
+            searchedNotes.map((searchedNote: NoteType) => JSON.stringify(searchedNote)).includes(JSON.stringify(item)),
+          );
+          setSearchedNotes(newSearchedNotes);
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error(error);
+        } finally {
+          setIsLoading(false);
         }
       },
     },

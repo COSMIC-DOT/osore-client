@@ -1,14 +1,23 @@
 'use client';
 
+import { useRef } from 'react';
+
 import CancelButton from '@/icons/cancel-icon';
 import SearchIcon from '@/icons/search-icon';
-import { useRef } from 'react';
+import noteStore from '@/stores/note-store';
+import searchStore from '@/stores/search-store';
+import NoteType from '@/types/note-type';
 
 function NoteSearchInput() {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const notes = noteStore((state: { notes: NoteType[] }) => state.notes);
+  const setSearchWord = searchStore((state: { setSearchWord: (word: string) => void }) => state.setSearchWord);
+  const setSearchedNotes = searchStore(
+    (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
+  );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const searchNote = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!cancelRef.current) return;
 
     if (!event.target.value) {
@@ -16,6 +25,10 @@ function NoteSearchInput() {
     } else {
       cancelRef.current.style.setProperty('display', 'inline-block');
     }
+    setSearchWord(event.target.value);
+    const searchedNotes = notes.filter((note: NoteType) => note.title.includes(event.target.value));
+
+    setSearchedNotes(searchedNotes);
   };
 
   const inputCancel = () => {
@@ -23,6 +36,8 @@ function NoteSearchInput() {
 
     inputRef.current.value = '';
     cancelRef.current.style.setProperty('display', 'none');
+    setSearchedNotes(notes);
+    setSearchWord('');
   };
 
   return (
@@ -41,7 +56,7 @@ function NoteSearchInput() {
           className="text-button flex w-[63px] items-center justify-center gap-3 bg-gray1 py-[12px] outline-none placeholder:text-gray4 valid:w-[214px] focus:w-[247px]"
           placeholder="Note 검색"
           required
-          onChange={handleChange}
+          onChange={searchNote}
         />
         <button type="button" aria-label="Cancel" className="hidden" ref={cancelRef} onClick={inputCancel}>
           <CancelButton />

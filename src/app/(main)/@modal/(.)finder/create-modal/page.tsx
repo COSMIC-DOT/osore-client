@@ -12,7 +12,8 @@ import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
 import Dropdwon from '@/components/dropdwon';
 import Spiner from '@/components/spiner';
 import noteStore from '@/stores/note-store';
-import Notetype from '@/types/note-type';
+import searchStore from '@/stores/search-store';
+import NoteType from '@/types/note-type';
 
 function CreateModal() {
   const router = useRouter();
@@ -27,7 +28,11 @@ function CreateModal() {
   const [selectedLink, setSelectedLink] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
-  const setNotes = noteStore((state: { setNotes: (notes: Notetype[]) => void }) => state.setNotes);
+  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
+  const searchWord = searchStore((state: { searchWord: string }) => state.searchWord);
+  const setSearchedNotes = searchStore(
+    (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
+  );
 
   const tagDropdownList = linkInfo.tag.map((tag, index) => {
     const dropdownItem = {
@@ -143,6 +148,8 @@ function CreateModal() {
         });
         const data = await response.json();
         setNotes(data);
+        const searchedNotes = data.filter((note: NoteType) => note.title.includes(searchWord));
+        setSearchedNotes(searchedNotes);
         setIsLoading(false);
         router.back();
       } catch (error) {
