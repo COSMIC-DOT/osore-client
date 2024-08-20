@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react';
 import Spiner from '@/components/spiner';
 import NoteType from '@/types/note-type';
 import noteStore from '@/stores/note-store';
+import searchStore from '@/stores/search-store';
 import Note from './note';
 
 function NoteList() {
   const [isLoading, setIsLoading] = useState(true);
   const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
-  const searchedNotes = noteStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
-  const setSearchedNotes = noteStore(
+  const searchedNotes = searchStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
+  const setSearchedNotes = searchStore(
     (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
   );
 

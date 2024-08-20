@@ -9,14 +9,15 @@ import StarIcon from '@/icons/star-icon';
 import ForkIcon from '@/icons/fork-icon';
 import Dropdwon from '@/components/dropdwon';
 import noteStore from '@/stores/note-store';
+import searchStore from '@/stores/search-store';
 
 function Note({ note }: { note: NoteType }) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
-  const searchedNotes = noteStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
-  const setSearchedNotes = noteStore(
+  const searchedNotes = searchStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
+  const setSearchedNotes = searchStore(
     (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
   );
 
