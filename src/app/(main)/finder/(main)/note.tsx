@@ -77,8 +77,8 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     <div className="flex h-[335px] w-[400px] flex-col justify-between">
       <div
         className="relative h-[270px] w-[400px]"
-        onClick={() => router.push('/note')}
-        onKeyDown={() => router.push('/note')}
+        onClick={() => router.push(`/note/${note.id}`)}
+        onKeyDown={() => router.push(`/note/${note.id}`)}
         tabIndex={0}
         role="button"
       >

@@ -1,3 +1,8 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useParams } from 'next/navigation';
+
 import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
@@ -6,6 +11,13 @@ import OsoreIcon from '@/icons/osore-icon';
 import TagIcon2 from '@/icons/tag-icon-2';
 
 function Navigation() {
+  const { id } = useParams();
+
+  useEffect(() => {
+    // TODO: id를 이용해 노트 정보 요청하기
+    console.log(id);
+  }, [id]);
+
   return (
     <div className="mt-[40px] flex h-[112px] flex-col gap-[24px] px-[80px]">
       <div className="flex h-[40px] items-center gap-[20px]">
