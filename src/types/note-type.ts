@@ -4,8 +4,7 @@ export default interface NoteType {
   avatar: string;
   repository: string;
   description: string;
-  contributors: string;
-  usedBy: string;
-  stars: string;
-  forks: string;
+  contributorsCount: string;
+  starsCount: string;
+  forksCount: string;
 }

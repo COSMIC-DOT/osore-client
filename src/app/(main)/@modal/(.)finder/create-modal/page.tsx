@@ -21,7 +21,7 @@ function CreateModal() {
   const tagDropdownref = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
-  const [linkInfo, setLinkInfo] = useState({ branch: [], tag: [] });
+  const [linkInfo, setLinkInfo] = useState({ branch: [], version: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
   const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
@@ -34,10 +34,10 @@ function CreateModal() {
     (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
   );
 
-  const tagDropdownList = linkInfo.tag.map((tag, index) => {
+  const tagDropdownList = linkInfo.version.map((version, index) => {
     const dropdownItem = {
       id: index,
-      text: tag,
+      text: version,
       handleClick: (event: React.MouseEvent<HTMLButtonElement>) => {
         const target = event.target as HTMLElement;
         setSelectedTag(target.textContent as string);
@@ -142,7 +142,7 @@ function CreateModal() {
           body: JSON.stringify({
             title: titleInputRef.current?.value,
             url: selectedLink,
-            tag: selectedTag,
+            version: selectedTag,
             branch: selectedBranch,
           }),
         });
