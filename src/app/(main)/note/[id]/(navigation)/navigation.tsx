@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
 import BranchIcon2 from '@/icons/branch-icon-2';
@@ -12,27 +12,38 @@ import TagIcon2 from '@/icons/tag-icon-2';
 
 function Navigation() {
   const { id } = useParams();
+  const [noteInfo, setNoteInfo] = useState({ title: '', version: '', branch: '', repository: '' });
 
   useEffect(() => {
-    // TODO: id를 이용해 노트 정보 요청하기
-    console.log(id);
+    (async () => {
+      try {
+        const response = await fetch(`/api/note?noteId=${id}`, {
+          method: 'GET',
+        });
+        const data = await response.json();
+        setNoteInfo(data);
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+      }
+    })();
   }, [id]);
 
   return (
     <div className="mt-[40px] flex h-[112px] flex-col gap-[24px] px-[80px]">
       <div className="flex h-[40px] items-center gap-[20px]">
-        <div className="text-title3">NOTE 이름</div>
+        <div className="text-title3">{noteInfo.title}</div>
         <div className="text-body2 text-gray2">|</div>
-        <div className="text-subtitle1 text-gray4">Github 레포 이름</div>
+        <div className="text-subtitle1 text-gray4">{noteInfo.repository}</div>
         <div className="text-body2 text-gray2">|</div>
         <div className="flex gap-[12px]">
           <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
             <TagIcon2 />
-            <div className="h-[20px]">태그 정보</div>
+            <div className="h-[20px]">{noteInfo.version}</div>
           </div>
           <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
             <BranchIcon2 />
-            <div className="h-[20px]">브랜치 정보</div>
+            <div className="h-[20px]">{noteInfo.branch}</div>
           </div>
         </div>
       </div>

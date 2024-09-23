@@ -113,7 +113,7 @@ function CreateModal() {
       setIsBranchDropdownOpen(false);
       setIsTagDropdownOpen(false);
       setIsLoading(true);
-      const response = await fetch(`/api/note?url=${urlInputRef.current?.value}`, {
+      const response = await fetch(`/api/repo?url=${urlInputRef.current?.value}`, {
         method: 'GET',
       });
       const data = await response.json();
