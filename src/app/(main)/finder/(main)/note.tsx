@@ -77,8 +77,8 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     <div className="flex h-[335px] w-[400px] flex-col justify-between">
       <div
         className="relative h-[270px] w-[400px]"
-        onClick={() => router.push('/note')}
-        onKeyDown={() => router.push('/note')}
+        onClick={() => router.push(`/note/${note.id}`)}
+        onKeyDown={() => router.push(`/note/${note.id}`)}
         tabIndex={0}
         role="button"
       >
@@ -105,11 +105,11 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
                 <div className="flex flex-col gap-[4px]">
                   <div className="text-subtitle2">
                     {/* eslint-disable-next-line no-nested-ternary */}
-                    {+note.contributors < 1000
-                      ? note.contributors
-                      : +note.contributors < 1000000
-                        ? `${Math.floor(+note.contributors / 1000)}K`
-                        : `${Math.floor(+note.contributors / 1000000)}M`}
+                    {+note.contributorsCount < 1000
+                      ? note.contributorsCount
+                      : +note.contributorsCount < 1000000
+                        ? `${Math.floor(+note.contributorsCount / 1000)}K`
+                        : `${Math.floor(+note.contributorsCount / 1000000)}M`}
                   </div>
                   <div className="text-caption">Contributors</div>
                 </div>
@@ -119,11 +119,11 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
                 <div className="flex flex-col gap-[4px]">
                   <div className="text-subtitle2">
                     {/* eslint-disable-next-line no-nested-ternary */}
-                    {+note.stars < 1000
-                      ? note.stars
-                      : +note.stars < 1000000
-                        ? `${Math.floor(+note.stars / 1000)}K`
-                        : `${Math.floor(+note.stars / 1000000)}M`}
+                    {+note.starsCount < 1000
+                      ? note.starsCount
+                      : +note.starsCount < 1000000
+                        ? `${Math.floor(+note.starsCount / 1000)}K`
+                        : `${Math.floor(+note.starsCount / 1000000)}M`}
                   </div>
                   <div className="text-caption">Stars</div>
                 </div>
@@ -133,11 +133,11 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
                 <div className="flex flex-col gap-[4px]">
                   <div className="text-subtitle2">
                     {/* eslint-disable-next-line no-nested-ternary */}
-                    {+note.forks < 1000
-                      ? note.forks
-                      : +note.forks < 1000000
-                        ? `${Math.floor(+note.forks / 1000)}K`
-                        : `${Math.floor(+note.forks / 1000000)}M`}
+                    {+note.forksCount < 1000
+                      ? note.forksCount
+                      : +note.forksCount < 1000000
+                        ? `${Math.floor(+note.forksCount / 1000)}K`
+                        : `${Math.floor(+note.forksCount / 1000000)}M`}
                   </div>
                   <div className="text-caption">Forks</div>
                 </div>
