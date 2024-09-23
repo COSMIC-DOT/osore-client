@@ -1,4 +1,4 @@
-import CodeScreen from './(main)/code-screen';
+import CodeScreen from './(code-screen)/code-screen';
 import Navigation from './(navigation)/navigation';
 
 export default function Note() {
