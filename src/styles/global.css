@@ -74,7 +74,7 @@ code {
 
 @font-face {
   font-family: 'Pretendard Variable';
-  src: url('/font/PretendardVariable.woff2') format('woff2');
+  src: url('/fonts/PretendardVariable.woff2') format('woff2');
 }
 
 @layer components {
