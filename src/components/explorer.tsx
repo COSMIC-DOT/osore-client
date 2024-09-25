@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 
 import fileStore from '@/stores/file-store';
@@ -43,13 +43,15 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
     }
   };
 
-  if (rootFile?.children.some((child) => child.name === 'README' && child.extension === 'md')) {
-    openFile('README.md');
-  } else {
-    setFileContent('');
-    setFileLanguage('');
-    setFilepath('');
-  }
+  useEffect(() => {
+    if (rootFile?.children.some((child) => child.name === 'README' && child.extension === 'md')) {
+      openFile('README.md');
+    } else {
+      setFileContent('');
+      setFileLanguage('');
+      setFilepath('');
+    }
+  }, []);
 
   const toggleFolder = (child: FileType) => {
     const toggleChild = (item: FileType): FileType => {
