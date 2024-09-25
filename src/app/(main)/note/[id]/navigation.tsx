@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
+import fileStore from '@/stores/file-store';
 import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
@@ -11,8 +12,10 @@ import OsoreIcon from '@/icons/osore-icon';
 import TagIcon2 from '@/icons/tag-icon-2';
 
 function Navigation() {
+  const router = useRouter();
   const { id } = useParams();
   const [noteInfo, setNoteInfo] = useState({ title: '', version: '', branch: '', repository: '' });
+  const filePath = fileStore((state: { path: string }) => state.path);
 
   useEffect(() => {
     (async () => {
@@ -49,11 +52,12 @@ function Navigation() {
       </div>
 
       <div className="flex h-[48px] items-center justify-between">
-        <div className="text-subtitle1">/hello/my/name/is.md</div>
+        <div className="text-subtitle1">{filePath}</div>
         <div className="flex h-[48px] w-[540px] gap-[12px]">
           <button
             type="button"
             className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-secondary px-[20px] py-[12px] text-white hover:bg-secondary_dark"
+            onClick={() => router.push(`/note/${id}/code`)}
           >
             <CodeIcon />
             <div className="h-[18px]">CODE</div>
@@ -61,6 +65,7 @@ function Navigation() {
           <button
             type="button"
             className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-secondary px-[20px] py-[12px] text-white hover:bg-secondary_dark"
+            onClick={() => router.push(`/note/${id}/graph`)}
           >
             <GraphIcon />
             <div className="h-[18px]">GRAPH</div>
@@ -68,9 +73,10 @@ function Navigation() {
           <button
             type="button"
             className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-secondary px-[20px] py-[12px] text-white hover:bg-secondary_dark"
+            onClick={() => router.push(`/note/${id}/memo`)}
           >
             <DocsIcon />
-            <div className="h-[18px]">요약</div>
+            <div className="h-[18px]">메모</div>
           </button>
           <button
             type="button"
