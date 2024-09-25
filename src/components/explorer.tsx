@@ -27,10 +27,8 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
   const setFileContent = fileStore((state: { setContent: (content: string) => void }) => state.setContent);
   const setFileLanguage = fileStore((state: { setLanguage: (langauge: string) => void }) => state.setLanguage);
 
-  const openFile = async (event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+  const openFile = async (filePath: string) => {
     try {
-      const filePath = event.currentTarget.getAttribute('data-value') || '';
-
       const response = await fetch(`/api/file?noteId=${id}&filePath=${filePath}`, {
         method: 'GET',
       });
@@ -44,6 +42,14 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
       console.error('Error: ', error);
     }
   };
+
+  if (rootFile?.children.some((child) => child.name === 'README' && child.extension === 'md')) {
+    openFile('README.md');
+  } else {
+    setFileContent('');
+    setFileLanguage('');
+    setFilepath('');
+  }
 
   const toggleFolder = (child: FileType) => {
     const toggleChild = (item: FileType): FileType => {
@@ -76,8 +82,14 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
             <div
               className="text-body2 w-[calc(100%-8px)] truncate"
               data-value={child.path}
-              onClick={openFile}
-              onKeyDown={openFile}
+              onClick={(event) => {
+                const filePath = event.currentTarget.getAttribute('data-value') || '';
+                openFile(filePath);
+              }}
+              onKeyDown={(event) => {
+                const filePath = event.currentTarget.getAttribute('data-value') || '';
+                openFile(filePath);
+              }}
               role="button"
               tabIndex={0}
             >
