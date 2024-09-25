@@ -1,7 +1,9 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useParams } from 'next/navigation';
 
+import fileStore from '@/stores/file-store';
 import ArrowDropRightIcon from '@/icons/arrow-dropright-icon';
 import CloseFolderIcon from '@/icons/close-folder-icon';
 import FileIcon from '@/icons/file-icon';
@@ -14,14 +16,33 @@ interface FileType {
   name?: string;
   type?: string;
   isOpen?: boolean;
+  path?: string;
 }
 
 function Explorer({ rootFile }: { rootFile: FileType | null }) {
+  const { id } = useParams();
   const [fileList, setFileList] = useState(rootFile);
   const folderRef = useRef<HTMLDivElement | null>(null);
+  const setFilepath = fileStore((state: { setPath: (path: string) => void }) => state.setPath);
+  const setFileContent = fileStore((state: { setContent: (content: string) => void }) => state.setContent);
+  const setFileLanguage = fileStore((state: { setLanguage: (langauge: string) => void }) => state.setLanguage);
 
-  const openFile = () => {
-    // TODO: 파일 열기
+  const openFile = async (event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+    try {
+      const filePath = event.currentTarget.getAttribute('data-value') || '';
+
+      const response = await fetch(`/api/file?noteId=${id}&filePath=${filePath}`, {
+        method: 'GET',
+      });
+      const { content, language } = await response.json();
+
+      setFileContent(content);
+      setFileLanguage(language);
+      setFilepath(filePath);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error: ', error);
+    }
   };
 
   const toggleFolder = (child: FileType) => {
@@ -50,9 +71,16 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
     return list?.children.map((child: FileType) => (
       <div>
         {child.type === 'file' ? (
-          <div className="flex gap-[8px] pl-[24px]" onClick={openFile} onKeyDown={openFile} role="button" tabIndex={0}>
+          <div className="flex gap-[8px] pl-[24px]">
             <FileIcon />
-            <div className="text-body2 w-[calc(100%-8px)] truncate">
+            <div
+              className="text-body2 w-[calc(100%-8px)] truncate"
+              data-value={child.path}
+              onClick={openFile}
+              onKeyDown={openFile}
+              role="button"
+              tabIndex={0}
+            >
               {child.name}.{child.extension}
             </div>
           </div>

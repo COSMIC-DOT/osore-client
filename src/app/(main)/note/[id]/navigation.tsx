@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
+import fileStore from '@/stores/file-store';
 import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
@@ -14,6 +15,7 @@ function Navigation() {
   const router = useRouter();
   const { id } = useParams();
   const [noteInfo, setNoteInfo] = useState({ title: '', version: '', branch: '', repository: '' });
+  const filePath = fileStore((state: { path: string }) => state.path);
 
   useEffect(() => {
     (async () => {
@@ -50,7 +52,7 @@ function Navigation() {
       </div>
 
       <div className="flex h-[48px] items-center justify-between">
-        <div className="text-subtitle1">/hello/my/name/is.md</div>
+        <div className="text-subtitle1">{filePath}</div>
         <div className="flex h-[48px] w-[540px] gap-[12px]">
           <button
             type="button"
