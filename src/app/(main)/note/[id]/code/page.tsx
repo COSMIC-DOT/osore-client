@@ -17,7 +17,7 @@ interface FileType {
   isOpen?: boolean;
 }
 
-function CodeScreen() {
+function Code() {
   const { id } = useParams();
   const [fileList, setFileList] = useState<FileType | null>(null);
   const folderRef = useRef<HTMLDivElement | null>(null);
@@ -133,4 +133,4 @@ function CodeScreen() {
   );
 }
 
-export default CodeScreen;
+export default Code;

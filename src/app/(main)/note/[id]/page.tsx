@@ -1,11 +1,11 @@
-import CodeScreen from './(code-screen)/code-screen';
-import Navigation from './(navigation)/navigation';
+'use client';
+
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Note() {
-  return (
-    <div>
-      <Navigation />
-      <CodeScreen />
-    </div>
-  );
+  const router = useRouter();
+  const pathname = usePathname();
+  router.push(`${pathname}/code`);
+
+  return <div>Note page</div>;
 }
