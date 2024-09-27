@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import fileStore from '@/stores/file-store';
 import BranchIcon2 from '@/icons/branch-icon-2';
@@ -14,6 +14,7 @@ import TagIcon2 from '@/icons/tag-icon-2';
 function Navigation() {
   const router = useRouter();
   const { id } = useParams();
+  const pathname = usePathname();
   const [noteInfo, setNoteInfo] = useState({ title: '', version: '', branch: '', repository: '' });
   const filePath = fileStore((state: { path: string }) => state.path);
 
@@ -31,6 +32,14 @@ function Navigation() {
       }
     })();
   }, [id]);
+
+  const askChatBot = () => {
+    if (pathname.split('/').includes('chat-bot')) {
+      router.back();
+    } else {
+      router.push(`${pathname}/chat-bot`);
+    }
+  };
 
   return (
     <div className="mt-[40px] flex h-[112px] flex-col gap-[24px] px-[80px]">
@@ -81,6 +90,7 @@ function Navigation() {
           <button
             type="button"
             className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-secondary px-[20px] py-[12px] text-white hover:bg-secondary_dark"
+            onClick={askChatBot}
           >
             <OsoreIcon />
             <div className="h-[18px]">ASK 소리</div>
