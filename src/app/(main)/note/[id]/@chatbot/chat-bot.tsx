@@ -3,8 +3,15 @@
 import CloseIcon from '@/icons/close-icon';
 import OsoreDarkIcon from '@/icons/osore-dark-icon';
 import SendIcon from '@/icons/send-icon';
+import { useRouter } from 'next/navigation';
 
 function ChatBot() {
+  const router = useRouter();
+
+  const closeChatBot = () => {
+    router.back();
+  };
+
   return (
     <div className="flex h-[684px] min-w-[432px] flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
       <div>
@@ -12,7 +19,7 @@ function ChatBot() {
           <div>
             <div className="text-title4">ASK SORE</div>
           </div>
-          <button type="button" className="flex h-[25px] w-[25px] items-center justify-center">
+          <button type="button" className="flex h-[25px] w-[25px] items-center justify-center" onClick={closeChatBot}>
             <CloseIcon />
           </button>
         </div>
