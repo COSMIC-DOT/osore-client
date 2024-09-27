@@ -8,8 +8,8 @@ import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
 import GraphIcon from '@/icons/graph-icon';
-import OsoreIcon from '@/icons/osore-icon';
 import TagIcon2 from '@/icons/tag-icon-2';
+import OsoreWhiteIcon from '@/icons/osore-white-icon';
 
 function Navigation() {
   const router = useRouter();
@@ -92,7 +92,7 @@ function Navigation() {
             className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-secondary px-[20px] py-[12px] text-white hover:bg-secondary_dark"
             onClick={askChatBot}
           >
-            <OsoreIcon />
+            <OsoreWhiteIcon />
             <div className="h-[18px]">ASK 소리</div>
           </button>
         </div>
