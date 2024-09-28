@@ -8,7 +8,6 @@ import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
 import GraphIcon from '@/icons/graph-icon';
-import TagIcon2 from '@/icons/tag-icon-2';
 import OsoreWhiteIcon from '@/icons/osore-white-icon';
 
 function Navigation() {
@@ -16,7 +15,7 @@ function Navigation() {
   const { id } = useParams();
   const pathname = usePathname();
   const [activeButton, setActiveButton] = useState(pathname.split('/')[3]);
-  const [noteInfo, setNoteInfo] = useState({ title: '', version: '', branch: '', repository: '' });
+  const [noteInfo, setNoteInfo] = useState({ title: '', branch: '', repository: '' });
   const filePath = fileStore((state: { path: string }) => state.path);
 
   useEffect(() => {
@@ -55,15 +54,9 @@ function Navigation() {
         <div className="text-body2 text-gray2">|</div>
         <div className="text-subtitle1 text-gray4">{noteInfo.repository}</div>
         <div className="text-body2 text-gray2">|</div>
-        <div className="flex gap-[12px]">
-          <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
-            <TagIcon2 />
-            <div className="h-[20px]">{noteInfo.version}</div>
-          </div>
-          <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
-            <BranchIcon2 />
-            <div className="h-[20px]">{noteInfo.branch}</div>
-          </div>
+        <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
+          <BranchIcon2 />
+          <div className="h-[20px]">{noteInfo.branch}</div>
         </div>
       </div>
 
