@@ -13,7 +13,7 @@ function Code() {
   const fileLanguage = fileStore((state: { language: string }) => state.language);
 
   return (
-    <div className="h-[696px] w-full overflow-y-auto border">
+    <div className="scrollbar-hide h-[696px] w-full overflow-y-auto border">
       {fileLanguage === 'markdown' ? (
         <div className="p-[32px]">
           <ReactMarkdown rehypePlugins={[rehypeHighlight, rehypeRaw]}>{fileContent}</ReactMarkdown>

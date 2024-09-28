@@ -163,7 +163,12 @@ function CreateModal() {
     <Modal>
       <div className="relative flex h-[507px] w-[649px] flex-col gap-[8px] rounded-[32px] bg-white p-[40px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
         <div className="flex h-[25px] w-[100%] justify-end">
-          <button type="button" onClick={closeModal} aria-label="닫기 버튼">
+          <button
+            type="button"
+            className="flex h-[24px] w-[24px] items-center justify-center"
+            onClick={closeModal}
+            aria-label="닫기 버튼"
+          >
             <CloseIcon />
           </button>
         </div>

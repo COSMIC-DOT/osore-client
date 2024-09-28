@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
+import userStore from '@/stores/user-store';
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
 import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
 import ProfileIcon from '@/icons/profile-icon';
@@ -15,6 +16,7 @@ function Profile() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState({ name: '', avatar: '' });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const setUserName = userStore((state: { setName: (name: string) => void }) => state.setName);
   const dropdownList = [
     {
       id: 1,
@@ -51,6 +53,7 @@ function Profile() {
         });
         const data = await response.json();
         setUser(data);
+        setUserName(data.name);
       } catch (error) {
         // eslint-disable-next-line
         console.error(error);
