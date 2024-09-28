@@ -79,7 +79,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
     return list?.children.map((child: FileType) => (
       <div>
         {child.type === 'file' ? (
-          <div className="flex gap-[8px] pl-[24px]">
+          <div className="flex h-[32px] items-center gap-[8px] rounded-[12px] pl-[24px] hover:bg-gray1">
             <FileIcon />
             <div
               className="text-body2 w-[calc(100%-8px)] truncate"
@@ -103,7 +103,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
             {child.isOpen ? (
               <div>
                 <div
-                  className="text-body2 flex select-none gap-[8px]"
+                  className="text-body2 flex h-[32px] select-none items-center gap-[8px] rounded-[12px] hover:bg-gray1"
                   ref={folderRef}
                   onClick={() => {
                     toggleFolder(child);
@@ -124,7 +124,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
               </div>
             ) : (
               <div
-                className="text-body2 flex select-none gap-[8px]"
+                className="text-body2 flex h-[32px] select-none items-center gap-[8px] rounded-[12px] hover:bg-gray1"
                 ref={folderRef}
                 onClick={() => {
                   toggleFolder(child);
@@ -149,7 +149,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
   }
 
   return (
-    <div className="h-[684px] min-w-[285px] max-w-[285px] overflow-y-scroll border p-[12px]">
+    <div className="flex h-[713px] min-w-[252px] max-w-[252px] flex-col gap-[4px] overflow-y-scroll rounded-[28px] bg-white p-[20px] shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)] scrollbar-hide">
       {createFileTree(fileList)}
     </div>
   );

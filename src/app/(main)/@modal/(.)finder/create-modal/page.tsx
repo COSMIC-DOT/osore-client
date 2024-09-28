@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 import Modal from '@/components/modal';
 import CloseIcon from '@/icons/close-icon';
-import TagIcon from '@/icons/tag-icon';
 import BranchIcon from '@/icons/branch-icon';
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
 import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
@@ -18,34 +17,18 @@ import NoteType from '@/types/note-type';
 function CreateModal() {
   const router = useRouter();
   const branchDropdownref = useRef<HTMLDivElement>(null);
-  const tagDropdownref = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
-  const [linkInfo, setLinkInfo] = useState({ branch: [], version: [] });
+  const [linkInfo, setLinkInfo] = useState({ branch: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
-  const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState('');
-  const [selectedTag, setSelectedTag] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
   const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
   const searchWord = searchStore((state: { searchWord: string }) => state.searchWord);
   const setSearchedNotes = searchStore(
     (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
   );
-
-  const tagDropdownList = linkInfo.version.map((version, index) => {
-    const dropdownItem = {
-      id: index,
-      text: version,
-      handleClick: (event: React.MouseEvent<HTMLButtonElement>) => {
-        const target = event.target as HTMLElement;
-        setSelectedTag(target.textContent as string);
-        setIsTagDropdownOpen(false);
-      },
-    };
-    return dropdownItem;
-  });
 
   const branchDropdownList = linkInfo.branch.map((branch, index) => {
     const dropdownItem = {
@@ -88,30 +71,9 @@ function CreateModal() {
     }
   };
 
-  useEffect(() => {
-    const tagDropdownOutsideClick = (event: MouseEvent) => {
-      if (isTagDropdownOpen && tagDropdownref.current && !tagDropdownref.current.contains(event.target as Node)) {
-        setIsTagDropdownOpen(!isTagDropdownOpen);
-      }
-    };
-
-    document.addEventListener('click', tagDropdownOutsideClick);
-
-    return () => {
-      document.removeEventListener('click', tagDropdownOutsideClick);
-    };
-  }, [isTagDropdownOpen]);
-
-  const toggleTagDropdown = () => {
-    if (tagDropdownList.length) {
-      setIsTagDropdownOpen(!isTagDropdownOpen);
-    }
-  };
-
   const searchLink = async () => {
     try {
       setIsBranchDropdownOpen(false);
-      setIsTagDropdownOpen(false);
       setIsLoading(true);
       const response = await fetch(`/api/repo?url=${urlInputRef.current?.value}`, {
         method: 'GET',
@@ -120,7 +82,6 @@ function CreateModal() {
       setIsLoading(false);
       setSelectedLink(urlInputRef.current?.value as string);
       setSelectedBranch('');
-      setSelectedTag('');
       if (Object.keys(data).length) {
         setLinkInfo(data);
       } else {
@@ -134,7 +95,7 @@ function CreateModal() {
   };
 
   const creataNote = async () => {
-    if (titleInputRef.current?.value && selectedLink && selectedBranch && selectedTag) {
+    if (titleInputRef.current?.value && selectedLink && selectedBranch) {
       try {
         setIsLoading(true);
         const response = await fetch('/api/note', {
@@ -142,7 +103,6 @@ function CreateModal() {
           body: JSON.stringify({
             title: titleInputRef.current?.value,
             url: selectedLink,
-            version: selectedTag,
             branch: selectedBranch,
           }),
         });
@@ -161,7 +121,7 @@ function CreateModal() {
 
   return (
     <Modal>
-      <div className="relative flex h-[507px] w-[649px] flex-col gap-[8px] rounded-[32px] bg-white p-[40px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
+      <div className="relative flex h-[451px] w-[649px] flex-col gap-[8px] rounded-[32px] bg-white p-[40px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
         <div className="flex h-[25px] w-[100%] justify-end">
           <button
             type="button"
@@ -208,31 +168,6 @@ function CreateModal() {
                   </button>
                 </div>
               </div>
-
-              <div className="flex h-[48px] items-center justify-start gap-[40px]">
-                <div className="text-subtitle1 flex w-[45px] items-center">Tag</div>
-                <div>
-                  <button
-                    type="button"
-                    className="mb-[8px] flex h-[40px] w-[192px] items-center justify-between rounded-[20px] bg-gray1 pl-[16px] pr-[8px]"
-                    onClick={toggleTagDropdown}
-                  >
-                    <div className="flex items-center gap-[4px]">
-                      <TagIcon />
-                      <div className="text-subtitle1 h-[20px] w-[116px] truncate text-left text-gray4">
-                        {selectedTag || '태그 선택'}
-                      </div>
-                    </div>
-                    <div className="flex h-[24px] w-[24px] items-center justify-center">
-                      {isTagDropdownOpen ? <ArrowDropupIcon /> : <ArrowDropdownIcon />}
-                    </div>
-                  </button>
-                  {isTagDropdownOpen && (
-                    <Dropdwon dropdownList={tagDropdownList} dropdownRef={tagDropdownref} border={false} />
-                  )}
-                </div>
-              </div>
-
               <div className="flex h-[48px] items-center justify-start gap-[40px]">
                 <div className="text-subtitle1 flex w-[45px] items-center">Branch</div>
                 <div>

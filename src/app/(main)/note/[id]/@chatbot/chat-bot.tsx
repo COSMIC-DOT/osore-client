@@ -16,7 +16,7 @@ function ChatBot() {
   };
 
   return (
-    <div className="flex h-[713px] min-w-[283px] flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
+    <div className="flex h-[713px] min-w-[283px] max-w-[283px]  flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
       <div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[4px]">
