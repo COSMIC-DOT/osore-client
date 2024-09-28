@@ -16,23 +16,20 @@ function ChatBot() {
   };
 
   return (
-    <div className="flex h-[684px] min-w-[432px] flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
+    <div className="flex h-[713px] min-w-[283px] flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
       <div>
-        <div className="flex items-center justify-between pb-[8px]">
-          <div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-[4px]">
+            <OsoreDarkIcon />
             <div className="text-title4">ASK SORE</div>
           </div>
           <button type="button" className="flex h-[25px] w-[25px] items-center justify-center" onClick={closeChatBot}>
             <CloseIcon />
           </button>
         </div>
-        <div className="flex h-[32px] items-center gap-[12px]">
-          <OsoreDarkIcon />
-          <div className="text-body1 h-[28px]">SORE</div>
-        </div>
       </div>
 
-      <div className="text-subtitle1 flex h-[197px] w-[392px] flex-col gap-[22px] rounded-[32px] bg-gray1 p-[20px]">
+      <div className="text-subtitle1 flex h-[284px] w-[243px] flex-col gap-[22px] rounded-[32px] bg-gray1 p-[20px]">
         <div>
           {userName}님, <br /> Sore에게 궁금한 것들을 물어보세요!
         </div>
@@ -45,8 +42,8 @@ function ChatBot() {
 
       <div className="flex h-[52px] w-[392px] items-center gap-[12px]">
         <input
-          className="placeholder:text-body2 flex h-[52px] w-[340px] items-center border p-[20px] placeholder:text-black"
-          placeholder="input"
+          className="placeholder:text-button flex h-[45px] w-[191px] items-center rounded-[16px] bg-gray1 px-[20px] py-[12px]"
+          placeholder="소리에게 물어보기"
         />
         <SendIcon />
       </div>
