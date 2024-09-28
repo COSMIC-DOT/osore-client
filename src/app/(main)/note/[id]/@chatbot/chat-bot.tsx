@@ -1,12 +1,15 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
+import userStore from '@/stores/user-store';
 import CloseIcon from '@/icons/close-icon';
 import OsoreDarkIcon from '@/icons/osore-dark-icon';
 import SendIcon from '@/icons/send-icon';
-import { useRouter } from 'next/navigation';
 
 function ChatBot() {
   const router = useRouter();
+  const userName = userStore((state: { name: string }) => state.name);
 
   const closeChatBot = () => {
     router.back();
@@ -31,7 +34,7 @@ function ChatBot() {
 
       <div className="text-subtitle1 flex h-[197px] w-[392px] flex-col gap-[22px] rounded-[32px] bg-gray1 p-[20px]">
         <div>
-          OO님, <br /> Sore에게 궁금한 것들을 물어보세요!
+          {userName}님, <br /> Sore에게 궁금한 것들을 물어보세요!
         </div>
         <div className="text-body3 flex flex-col gap-[12px]">
           <div>1. 이 저장소는 어떤 프로그래밍 언어로 작성되었나요?</div>
