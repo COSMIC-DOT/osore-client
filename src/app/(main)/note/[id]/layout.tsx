@@ -25,7 +25,7 @@ export default async function NoteLayout({
   const rootFile = data.result.data;
 
   return (
-    <div>
+    <div className="max-w-[100vw]">
       <Navigation />
       <div className="mt-[29px] flex gap-[20px] px-[80px]">
         <Explorer rootFile={rootFile} />

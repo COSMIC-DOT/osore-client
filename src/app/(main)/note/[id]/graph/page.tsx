@@ -1,6 +1,8 @@
 function Graph() {
   return (
-    <div className="text-title2 flex h-[696px] w-full items-center justify-center bg-[#D9D9D9]">업데이트 예정</div>
+    <div className="text-title2 flex h-[696px] w-full items-center justify-center rounded-[28px] bg-white p-[20px] shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)] ">
+      업데이트 예정
+    </div>
   );
 }
 

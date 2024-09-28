@@ -149,7 +149,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
   }
 
   return (
-    <div className="flex h-[713px] min-w-[252px] max-w-[252px] flex-col gap-[4px] overflow-y-scroll rounded-[28px] bg-white p-[20px] shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)]">
+    <div className="flex h-[713px] min-w-[252px] max-w-[252px] flex-col gap-[4px] overflow-y-scroll rounded-[28px] bg-white p-[20px] shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)] scrollbar-hide">
       {createFileTree(fileList)}
     </div>
   );
