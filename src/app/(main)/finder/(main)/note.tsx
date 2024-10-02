@@ -14,6 +14,9 @@ import searchStore from '@/stores/search-store';
 function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading: boolean) => void }) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const noteTitleInputRef = useRef<HTMLInputElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedNoteTitle, setEditedNoteTilte] = useState(note.title);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
   const searchedNotes = searchStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
@@ -26,7 +29,11 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
       id: 1,
       text: '수정하기',
       handleClick: () => {
-        // TODO: 노트 수정하기
+        setIsDropdownOpen(false);
+        setIsEditing(true);
+        setTimeout(() => {
+          noteTitleInputRef.current?.select();
+        }, 0);
       },
     },
     {
@@ -69,8 +76,27 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     };
   }, [isDropdownOpen]);
 
+  useEffect(() => {
+    const cancelEditNoteTitle = (event: MouseEvent) => {
+      if (isEditing && noteTitleInputRef.current !== event.target) {
+        setIsEditing(!isEditing);
+        setEditedNoteTilte(note.title);
+      }
+    };
+
+    document.addEventListener('click', cancelEditNoteTitle);
+
+    return () => {
+      document.removeEventListener('click', cancelEditNoteTitle);
+    };
+  }, [isEditing, note]);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleNoteTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedNoteTilte(event.target.value);
   };
 
   return (
@@ -148,7 +174,11 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
       </div>
       <div className="flex h-[49px] w-[400px] justify-between">
         <div className="h-[49px] w-[240px]">
-          <div className="text-subtitle1 truncate">{note.title}</div>
+          {isEditing ? (
+            <input ref={noteTitleInputRef} value={editedNoteTitle} onChange={handleNoteTitleChange} />
+          ) : (
+            <div className="text-subtitle1 truncate">{note.title}</div>
+          )}
           <div className="text-body3 text-gray4">Viewed 2 months ago</div>
         </div>
         <div>
