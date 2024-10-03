@@ -1,13 +1,7 @@
-import '@/styles/global.css';
-import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import Header from './header';
-
-export const metadata: Metadata = {
-  title: '오소리',
-};
 
 export default async function RootLayout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
   const cookie = cookies().get('JSESSIONID')?.value;
@@ -25,14 +19,12 @@ export default async function RootLayout({ children, modal }: { children: React.
   }
 
   return (
-    <html lang="ko">
-      <body className="flex w-[100%] justify-center">
-        <div>
-          <Header />
-          {children}
-          {modal}
-        </div>
-      </body>
-    </html>
+    <body className="flex w-[100%] justify-center">
+      <div>
+        <Header />
+        {children}
+        {modal}
+      </div>
+    </body>
   );
 }
