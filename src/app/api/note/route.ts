@@ -21,6 +21,18 @@ export async function POST(request: Request) {
   return Response.json(noteList);
 }
 
+export async function PUT(request: Request) {
+  const instance = await getInstance();
+  const { searchParams } = new URL(request.url);
+  const noteId = searchParams.get('noteId');
+  const title = searchParams.get('title');
+  const { data } = await instance.put(`/api/note?noteId=${noteId}&title=${title}`);
+
+  const noteList = data.result.data.list || [];
+
+  return Response.json(noteList);
+}
+
 export async function DELETE(request: Request) {
   const instance = await getInstance();
   const { searchParams } = new URL(request.url);

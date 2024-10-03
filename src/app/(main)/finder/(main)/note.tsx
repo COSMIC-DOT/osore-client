@@ -14,6 +14,9 @@ import searchStore from '@/stores/search-store';
 function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading: boolean) => void }) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const noteTitleInputRef = useRef<HTMLInputElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedNoteTitle, setEditedNoteTilte] = useState(note.title);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
   const searchedNotes = searchStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
@@ -21,12 +24,20 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
   );
 
+  useEffect(() => {
+    setEditedNoteTilte(note.title);
+  }, [note]);
+
   const noteDropdwonList = [
     {
       id: 1,
       text: '수정하기',
       handleClick: () => {
-        // TODO: 노트 수정하기
+        setIsDropdownOpen(false);
+        setIsEditing(true);
+        setTimeout(() => {
+          noteTitleInputRef.current?.select();
+        }, 0);
       },
     },
     {
@@ -69,8 +80,64 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     };
   }, [isDropdownOpen]);
 
+  useEffect(() => {
+    const noteTitleInputOutsideClick = async (event: MouseEvent) => {
+      try {
+        const title = noteTitleInputRef.current?.value;
+        if (isEditing && noteTitleInputRef.current !== event.target) {
+          setIsEditing(!isEditing);
+          if (title !== note.title && title !== '') {
+            const response = await fetch(`/api/note?noteId=${note.id}&title=${title}`, {
+              method: 'PUT',
+            });
+            const data = await response.json();
+            setNotes(data);
+            setSearchedNotes(data);
+          } else {
+            setEditedNoteTilte(note.title);
+          }
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    };
+
+    document.addEventListener('click', noteTitleInputOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', noteTitleInputOutsideClick);
+    };
+  }, [isEditing, note, setNotes, setSearchedNotes]);
+
+  const enterNoteTitleInput = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    try {
+      const title = (event.target as HTMLInputElement).value;
+      if (event.key === 'Enter') {
+        setIsEditing(!isEditing);
+        if (title !== note.title && title !== '') {
+          const response = await fetch(`/api/note?noteId=${note.id}&title=${title}`, {
+            method: 'PUT',
+          });
+          const data = await response.json();
+          setNotes(data);
+          setSearchedNotes(data);
+        } else {
+          setEditedNoteTilte(note.title);
+        }
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  };
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleNoteTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedNoteTilte(event.target.value);
   };
 
   return (
@@ -148,7 +215,17 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
       </div>
       <div className="flex h-[49px] w-[400px] justify-between">
         <div className="h-[49px] w-[240px]">
-          <div className="text-subtitle1 truncate">{note.title}</div>
+          {isEditing ? (
+            <input
+              ref={noteTitleInputRef}
+              className="text-subtitle1"
+              value={editedNoteTitle}
+              onChange={handleNoteTitleChange}
+              onKeyDown={enterNoteTitleInput}
+            />
+          ) : (
+            <div className="text-subtitle1 truncate">{note.title}</div>
+          )}
           <div className="text-body3 text-gray4">Viewed 2 months ago</div>
         </div>
         <div>
