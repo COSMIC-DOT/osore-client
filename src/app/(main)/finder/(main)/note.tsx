@@ -24,6 +24,10 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
   );
 
+  useEffect(() => {
+    setEditedNoteTilte(note.title);
+  }, [note]);
+
   const noteDropdwonList = [
     {
       id: 1,
@@ -77,19 +81,56 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
   }, [isDropdownOpen]);
 
   useEffect(() => {
-    const cancelEditNoteTitle = (event: MouseEvent) => {
-      if (isEditing && noteTitleInputRef.current !== event.target) {
-        setIsEditing(!isEditing);
-        setEditedNoteTilte(note.title);
+    const noteTitleInputOutsideClick = async (event: MouseEvent) => {
+      try {
+        const title = noteTitleInputRef.current?.value;
+        if (isEditing && noteTitleInputRef.current !== event.target) {
+          setIsEditing(!isEditing);
+          if (title !== note.title && title !== '') {
+            const response = await fetch(`/api/note?noteId=${note.id}&title=${title}`, {
+              method: 'PUT',
+            });
+            const data = await response.json();
+            setNotes(data);
+            setSearchedNotes(data);
+          } else {
+            setEditedNoteTilte(note.title);
+          }
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
       }
     };
 
-    document.addEventListener('click', cancelEditNoteTitle);
+    document.addEventListener('click', noteTitleInputOutsideClick);
 
     return () => {
-      document.removeEventListener('click', cancelEditNoteTitle);
+      document.removeEventListener('click', noteTitleInputOutsideClick);
     };
-  }, [isEditing, note]);
+  }, [isEditing, note, setNotes, setSearchedNotes]);
+
+  const enterNoteTitleInput = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    try {
+      const title = (event.target as HTMLInputElement).value;
+      if (event.key === 'Enter') {
+        setIsEditing(!isEditing);
+        if (title !== note.title && title !== '') {
+          const response = await fetch(`/api/note?noteId=${note.id}&title=${title}`, {
+            method: 'PUT',
+          });
+          const data = await response.json();
+          setNotes(data);
+          setSearchedNotes(data);
+        } else {
+          setEditedNoteTilte(note.title);
+        }
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -175,7 +216,13 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
       <div className="flex h-[49px] w-[400px] justify-between">
         <div className="h-[49px] w-[240px]">
           {isEditing ? (
-            <input ref={noteTitleInputRef} value={editedNoteTitle} onChange={handleNoteTitleChange} />
+            <input
+              ref={noteTitleInputRef}
+              className="text-subtitle1"
+              value={editedNoteTitle}
+              onChange={handleNoteTitleChange}
+              onKeyDown={enterNoteTitleInput}
+            />
           ) : (
             <div className="text-subtitle1 truncate">{note.title}</div>
           )}
