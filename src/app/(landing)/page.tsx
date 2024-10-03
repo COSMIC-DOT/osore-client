@@ -1,10 +1,26 @@
 import Image from 'next/image';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
+import Header from './header';
 import GitHubLoginButton from './github-login-button';
 import GoogleLoginButton from './google-login-button';
-import Header from './header';
 
-export default function Home() {
+export default async function Home() {
+  const cookie = cookies().get('JSESSIONID')?.value;
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/check`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: `JSESSIONID=${cookie}`,
+    },
+  });
+  const { success: isLogin } = await response.json();
+
+  if (isLogin) {
+    redirect('/finder');
+  }
+
   return (
     <div className="flex items-center justify-between pl-[80px]">
       <Image className="bg1" src="/images/bg1.png" alt="배경1" height={1280} width={1440} />
