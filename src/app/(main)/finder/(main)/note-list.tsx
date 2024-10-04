@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import Spiner from '@/components/spiner';
+import Loading from '@/components/loading';
 import NoteType from '@/types/note-type';
 import noteStore from '@/stores/note-store';
 import searchStore from '@/stores/search-store';
@@ -43,7 +43,7 @@ function NoteList() {
     <main className="relative flex min-h-[calc(100vh-240px)] min-w-[100vw] flex-col px-[80px]">
       {isLoading && (
         <div className="absolute left-0 top-[-120px] z-50 flex h-[calc(100vh-120px)] w-full items-center justify-center">
-          <Spiner />
+          <Loading />
         </div>
       )}
       <div className="flex flex-wrap gap-[40px]">
