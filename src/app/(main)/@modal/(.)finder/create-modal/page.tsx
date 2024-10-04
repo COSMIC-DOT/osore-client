@@ -9,7 +9,7 @@ import BranchIcon from '@/icons/branch-icon';
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
 import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
 import Dropdwon from '@/components/dropdwon';
-import Spiner from '@/components/spiner';
+import Loading from '@/components/loading';
 import noteStore from '@/stores/note-store';
 import searchStore from '@/stores/search-store';
 import NoteType from '@/types/note-type';
@@ -202,7 +202,7 @@ function CreateModal() {
             생성하기
           </button>
         </div>
-        {isLoading && <Spiner />}
+        {isLoading && <Loading />}
       </div>
     </Modal>
   );

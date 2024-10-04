@@ -44,7 +44,11 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
   };
 
   useEffect(() => {
-    if (rootFile?.children.some((child) => child.name === 'README' && child.extension === 'md')) {
+    if (
+      rootFile?.children.some(
+        (child) => (child.name === 'README' || child.name === 'readme') && child.extension === 'md',
+      )
+    ) {
       openFile('README.md');
     } else {
       setFileContent('');
