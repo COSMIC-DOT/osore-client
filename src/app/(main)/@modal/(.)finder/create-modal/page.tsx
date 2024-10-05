@@ -98,7 +98,7 @@ function CreateModal() {
     if (titleInputRef.current?.value && selectedLink && selectedBranch) {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/note', {
+        const response = await fetch('/api/notes', {
           method: 'POST',
           body: JSON.stringify({
             title: titleInputRef.current?.value,

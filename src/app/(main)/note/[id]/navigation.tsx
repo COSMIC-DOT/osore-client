@@ -21,7 +21,7 @@ function Navigation() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(`/api/note?noteId=${id}`, {
+        const response = await fetch(`/api/notes/${id}`, {
           method: 'GET',
         });
         const data = await response.json();

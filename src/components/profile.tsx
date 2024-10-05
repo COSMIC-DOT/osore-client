@@ -48,7 +48,7 @@ function Profile() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch('/api/profile', {
+        const response = await fetch('/api/member', {
           method: 'GET',
         });
         const data = await response.json();
