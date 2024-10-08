@@ -7,4 +7,5 @@ export default interface NoteType {
   contributorsCount: string;
   starsCount: string;
   forksCount: string;
+  viewedAt: { number: number; unit: string };
 }

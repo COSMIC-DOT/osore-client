@@ -27,7 +27,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
   const setFileContent = fileStore((state: { setContent: (content: string) => void }) => state.setContent);
   const setFileLanguage = fileStore((state: { setLanguage: (langauge: string) => void }) => state.setLanguage);
 
-  const openFile = async (fileId: number) => {
+  const openFile = async (fileId: string) => {
     try {
       const response = await fetch(`/api/files/${fileId}?noteId=${id}`, {
         method: 'GET',

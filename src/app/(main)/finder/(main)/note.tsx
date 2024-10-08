@@ -232,7 +232,9 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
           ) : (
             <div className="text-subtitle1 truncate">{note.title}</div>
           )}
-          <div className="text-body3 text-gray4">Viewed 2 months ago</div>
+          <div className="text-body3 text-gray4">
+            Viewed {note.viewedAt.number} {note.viewedAt.unit} ago
+          </div>
         </div>
         <div>
           <button
