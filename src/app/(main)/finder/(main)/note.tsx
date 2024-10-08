@@ -53,7 +53,7 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
           const data = await response.json();
           setNotes(data);
           const newSearchedNotes = data.filter((item: NoteType) =>
-            searchedNotes.map((searchedNote: NoteType) => JSON.stringify(searchedNote)).includes(JSON.stringify(item)),
+            searchedNotes.map((searchedNote: NoteType) => searchedNote.id).includes(item.id),
           );
           setSearchedNotes(newSearchedNotes);
         } catch (error) {
@@ -90,7 +90,7 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
             const response = await fetch(`/api/notes/${note.id}`, {
               method: 'PUT',
               body: JSON.stringify({
-                title: note.title,
+                title,
               }),
             });
             const data = await response.json();
@@ -122,7 +122,7 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
           const response = await fetch(`/api/notes/${note.id}`, {
             method: 'PUT',
             body: JSON.stringify({
-              title: note.title,
+              title,
             }),
           });
           const data = await response.json();
