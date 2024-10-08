@@ -11,12 +11,12 @@ import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
 import OpenFolderIcon from '@/icons/open-folder-icon';
 
 interface FileType {
+  id: number;
   children: FileType[];
   extension?: string;
   name?: string;
   type?: string;
   isOpen?: boolean;
-  path?: string;
 }
 
 function Explorer({ rootFile }: { rootFile: FileType | null }) {
@@ -27,16 +27,17 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
   const setFileContent = fileStore((state: { setContent: (content: string) => void }) => state.setContent);
   const setFileLanguage = fileStore((state: { setLanguage: (langauge: string) => void }) => state.setLanguage);
 
-  const openFile = async (filePath: string) => {
+  const openFile = async (fileId: number) => {
     try {
-      const response = await fetch(`/api/file?noteId=${id}&filePath=${filePath}`, {
+      const response = await fetch(`/api/files/${fileId}?noteId=${id}`, {
         method: 'GET',
       });
-      const { content, language } = await response.json();
+
+      const { content, language, path } = await response.json();
 
       setFileContent(content);
       setFileLanguage(language);
-      setFilepath(filePath);
+      setFilepath(path);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error: ', error);
@@ -87,14 +88,14 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
             <FileIcon />
             <div
               className="text-body2 w-[calc(100%-8px)] truncate"
-              data-value={child.path}
+              data-value={child.id}
               onClick={(event) => {
-                const filePath = event.currentTarget.getAttribute('data-value') || '';
-                openFile(filePath);
+                const fileId = event.currentTarget.getAttribute('data-value') || '';
+                openFile(fileId);
               }}
               onKeyDown={(event) => {
-                const filePath = event.currentTarget.getAttribute('data-value') || '';
-                openFile(filePath);
+                const fileId = event.currentTarget.getAttribute('data-value') || '';
+                openFile(fileId);
               }}
               role="button"
               tabIndex={0}

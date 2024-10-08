@@ -47,13 +47,13 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
         try {
           setIsLoading(true);
           setIsDropdownOpen(false);
-          const response = await fetch(`/api/note?noteId=${note.id}`, {
+          const response = await fetch(`/api/notes/${note.id}`, {
             method: 'DELETE',
           });
           const data = await response.json();
           setNotes(data);
           const newSearchedNotes = data.filter((item: NoteType) =>
-            searchedNotes.map((searchedNote: NoteType) => JSON.stringify(searchedNote)).includes(JSON.stringify(item)),
+            searchedNotes.map((searchedNote: NoteType) => searchedNote.id).includes(item.id),
           );
           setSearchedNotes(newSearchedNotes);
         } catch (error) {
@@ -87,8 +87,11 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
         if (isEditing && noteTitleInputRef.current !== event.target) {
           setIsEditing(!isEditing);
           if (title !== note.title && title !== '') {
-            const response = await fetch(`/api/note?noteId=${note.id}&title=${title}`, {
+            const response = await fetch(`/api/notes/${note.id}`, {
               method: 'PUT',
+              body: JSON.stringify({
+                title,
+              }),
             });
             const data = await response.json();
             setNotes(data);
@@ -116,8 +119,11 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
       if (event.key === 'Enter') {
         setIsEditing(!isEditing);
         if (title !== note.title && title !== '') {
-          const response = await fetch(`/api/note?noteId=${note.id}&title=${title}`, {
+          const response = await fetch(`/api/notes/${note.id}`, {
             method: 'PUT',
+            body: JSON.stringify({
+              title,
+            }),
           });
           const data = await response.json();
           setNotes(data);
