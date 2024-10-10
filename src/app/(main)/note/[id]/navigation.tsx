@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import fileStore from '@/stores/file-store';
@@ -17,6 +17,27 @@ function Navigation() {
   const [activeButton, setActiveButton] = useState(pathname.split('/')[3]);
   const [noteInfo, setNoteInfo] = useState({ title: '', branch: '', repository: '' });
   const filePath = fileStore((state: { path: string }) => state.path);
+
+  useEffect(() => {
+    setActiveButton(pathname.split('/')[3]);
+  }, [pathname]);
+
+  useEffect(() => {
+    const exit = async () => {
+      try {
+        navigator.sendBeacon(`/api/notes/${id}/exit`);
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+      }
+    };
+
+    window.addEventListener('beforeunload', exit);
+
+    return () => {
+      window.removeEventListener('beforeunload', exit);
+    };
+  }, [id]);
 
   useEffect(() => {
     (async () => {
@@ -36,7 +57,7 @@ function Navigation() {
   const navigatePage = (event: React.MouseEvent<HTMLButtonElement>) => {
     const clickedButton = event.currentTarget.getAttribute('data-value') || '';
     router.push(`/note/${id}/${clickedButton}`);
-    setActiveButton(clickedButton);
+    // setActiveButton(clickedButton);
   };
 
   const askChatBot = () => {

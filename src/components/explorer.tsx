@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
 
 import fileStore from '@/stores/file-store';
 import ArrowDropRightIcon from '@/icons/arrow-dropright-icon';
@@ -20,7 +19,6 @@ interface FileType {
 }
 
 function Explorer({ rootFile }: { rootFile: FileType | null }) {
-  const { id } = useParams();
   const [fileList, setFileList] = useState(rootFile);
   const folderRef = useRef<HTMLDivElement | null>(null);
   const setFilepath = fileStore((state: { setPath: (path: string) => void }) => state.setPath);
@@ -29,7 +27,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
 
   const openFile = async (fileId: string) => {
     try {
-      const response = await fetch(`/api/files/${fileId}?noteId=${id}`, {
+      const response = await fetch(`/api/files/${fileId}`, {
         method: 'GET',
       });
 
@@ -45,17 +43,15 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
   };
 
   useEffect(() => {
-    if (
-      rootFile?.children.some(
-        (child) => (child.name === 'README' || child.name === 'readme') && child.extension === 'md',
-      )
-    ) {
-      openFile('README.md');
-    } else {
-      setFileContent('');
-      setFileLanguage('');
-      setFilepath('');
-    }
+    rootFile?.children.forEach((child) => {
+      if ((child.name === 'README' || child.name === 'readme') && child.extension === 'md') {
+        openFile(child.id.toString());
+      } else {
+        setFileContent('');
+        setFileLanguage('');
+        setFilepath('');
+      }
+    });
   }, []);
 
   const toggleFolder = (child: FileType) => {
