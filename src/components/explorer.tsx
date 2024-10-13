@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import fileStore from '@/stores/file-store';
 import ArrowDropRightIcon from '@/icons/arrow-dropright-icon';
@@ -20,41 +20,37 @@ interface FileType {
 }
 
 function Explorer({ rootFile }: { rootFile: FileType | null }) {
+  const router = useRouter();
   const { id } = useParams();
   const [fileList, setFileList] = useState(rootFile);
   const folderRef = useRef<HTMLDivElement | null>(null);
   const setFilepath = fileStore((state: { setPath: (path: string) => void }) => state.setPath);
   const setFileContent = fileStore((state: { setContent: (content: string) => void }) => state.setContent);
   const setFileLanguage = fileStore((state: { setLanguage: (langauge: string) => void }) => state.setLanguage);
+  const setFileId = fileStore((state: { setId: (id: number) => void }) => state.setId);
 
-  const openFile = async (fileId: number) => {
-    try {
-      const response = await fetch(`/api/files/${fileId}?noteId=${id}`, {
-        method: 'GET',
-      });
-
-      const { content, language, path } = await response.json();
-
-      setFileContent(content);
-      setFileLanguage(language);
-      setFilepath(path);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error: ', error);
-    }
+  const openFile = (event: MouseEvent | KeyboardEvent) => {
+    const fileId = event.currentTarget.getAttribute('data-value') || '';
+    setFileId(fileId);
+    router.push(`/note/${id}/code/${fileId}`);
   };
 
   useEffect(() => {
-    if (
-      rootFile?.children.some(
-        (child) => (child.name === 'README' || child.name === 'readme') && child.extension === 'md',
-      )
-    ) {
-      openFile('README.md');
-    } else {
+    const isReadme = rootFile?.children.some(
+      (child) => (child.name === 'README' || child.name === 'readme') && child.extension === 'md',
+    );
+
+    if (!isReadme) {
       setFileContent('');
       setFileLanguage('');
       setFilepath('');
+      router.replace(`/note/${id}`);
+    } else {
+      rootFile?.children.forEach((child) => {
+        if ((child.name === 'README' || child.name === 'readme') && child.extension === 'md') {
+          router.replace(`/note/${id}/code/${child.id.toString()}`);
+        }
+      });
     }
   }, []);
 
@@ -89,14 +85,8 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
             <div
               className="text-body2 w-[calc(100%-8px)] truncate"
               data-value={child.id}
-              onClick={(event) => {
-                const fileId = event.currentTarget.getAttribute('data-value') || '';
-                openFile(fileId);
-              }}
-              onKeyDown={(event) => {
-                const fileId = event.currentTarget.getAttribute('data-value') || '';
-                openFile(fileId);
-              }}
+              onClick={openFile}
+              onKeyDown={openFile}
               role="button"
               tabIndex={0}
             >

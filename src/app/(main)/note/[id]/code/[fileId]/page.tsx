@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Editor from '@monaco-editor/react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
@@ -9,8 +11,31 @@ import 'highlight.js/styles/github.css';
 import fileStore from '@/stores/file-store';
 
 function Code() {
+  const { fileId } = useParams();
   const fileContent = fileStore((state: { content: string }) => state.content);
   const fileLanguage = fileStore((state: { language: string }) => state.language);
+  const setFilepath = fileStore((state: { setPath: (path: string) => void }) => state.setPath);
+  const setFileContent = fileStore((state: { setContent: (content: string) => void }) => state.setContent);
+  const setFileLanguage = fileStore((state: { setLanguage: (langauge: string) => void }) => state.setLanguage);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch(`/api/files/${fileId}`, {
+          method: 'GET',
+        });
+
+        const { content, language, path } = await response.json();
+
+        setFileContent(content);
+        setFileLanguage(language);
+        setFilepath(path);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error: ', error);
+      }
+    })();
+  }, []);
 
   return (
     <div className="h-[717px] w-full overflow-y-auto rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)] scrollbar-hide">

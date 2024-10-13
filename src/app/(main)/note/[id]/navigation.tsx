@@ -17,6 +17,28 @@ function Navigation() {
   const [activeButton, setActiveButton] = useState(pathname.split('/')[3]);
   const [noteInfo, setNoteInfo] = useState({ title: '', branch: '', repository: '' });
   const filePath = fileStore((state: { path: string }) => state.path);
+  const fileId = fileStore((state: { id: number }) => state.id);
+
+  useEffect(() => {
+    setActiveButton(pathname.split('/')[3]);
+  }, [pathname]);
+
+  useEffect(() => {
+    const exit = () => {
+      try {
+        navigator.sendBeacon(`/api/notes/${id}/exit`);
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+      }
+    };
+
+    window.addEventListener('beforeunload', exit);
+
+    return () => {
+      window.removeEventListener('beforeunload', exit);
+    };
+  }, [id]);
 
   useEffect(() => {
     (async () => {
@@ -35,8 +57,11 @@ function Navigation() {
 
   const navigatePage = (event: React.MouseEvent<HTMLButtonElement>) => {
     const clickedButton = event.currentTarget.getAttribute('data-value') || '';
-    router.push(`/note/${id}/${clickedButton}`);
-    setActiveButton(clickedButton);
+    if (clickedButton === 'code') {
+      router.push(`/note/${id}/${clickedButton}/${fileId}`);
+    } else {
+      router.push(`/note/${id}/${clickedButton}`);
+    }
   };
 
   const askChatBot = () => {
