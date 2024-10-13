@@ -1,19 +1,42 @@
 'use client';
 
 import Image from 'next/image';
+import { useParams, useRouter } from 'next/navigation';
 
+import NoteType from '@/types/note-type';
+import noteStore from '@/stores/note-store';
+import searchStore from '@/stores/search-store';
 import Profile from '@/components/profile';
-import { useRouter } from 'next/navigation';
 
 function Header() {
   const router = useRouter();
+  const { id } = useParams();
+  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
+  const setSearchedNotes = searchStore(
+    (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
+  );
+
+  const goToFinder = async () => {
+    try {
+      const response = await fetch(`/api/notes/${id}/exit`, {
+        method: 'POST',
+      });
+      const data = await response.json();
+      setNotes(data);
+      setSearchedNotes(data);
+      router.replace('/finder');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  };
 
   return (
     <header className="flex h-[120px] min-w-[100vw] items-center justify-between border border-white border-b-gray1 px-[80px]">
       <div
         className="flex h-[47px] w-[223px] items-center justify-between"
-        onClick={() => router.replace('/finder')}
-        onKeyDown={() => router.replace('/finder')}
+        onClick={goToFinder}
+        onKeyDown={goToFinder}
         tabIndex={0}
         role="button"
       >
