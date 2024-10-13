@@ -1,11 +1,7 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-
 export default function Note() {
-  const router = useRouter();
-  const pathname = usePathname();
-  router.replace(`${pathname}/code`);
-
-  return <div />;
+  return (
+    <div className="h-[696px] w-full rounded-[28px] bg-white p-[20px] shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)]" />
+  );
 }

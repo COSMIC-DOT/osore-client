@@ -1,6 +1,6 @@
 'use client';
 
-import ChatBot from '../../chat-bot';
+import ChatBot from '../../../chat-bot';
 
 function ChatBotPage() {
   return <ChatBot />;

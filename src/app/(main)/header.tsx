@@ -12,8 +12,8 @@ function Header() {
     <header className="flex h-[120px] min-w-[100vw] items-center justify-between border border-white border-b-gray1 px-[80px]">
       <div
         className="flex h-[47px] w-[223px] items-center justify-between"
-        onClick={() => router.push('/finder')}
-        onKeyDown={() => router.push('/finder')}
+        onClick={() => router.replace('/finder')}
+        onKeyDown={() => router.replace('/finder')}
         tabIndex={0}
         role="button"
       >

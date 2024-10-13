@@ -21,6 +21,7 @@ export default function NotFound() {
         <div>
           <Link
             href="/"
+            replace
             className="text-button flex h-[48px] w-[112px] items-center justify-center rounded-[16px] bg-primary text-white no-underline  hover:bg-primary_dark hover:text-white"
           >
             메인페이지로

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 
 interface FileStoreType {
+  id: number;
+  setId: (id: number) => void;
   path: string;
   setPath: (path: string) => void;
   content: string;
@@ -10,6 +12,8 @@ interface FileStoreType {
 }
 
 const fileStore = create<FileStoreType>((set) => ({
+  id: 0,
+  setId: (id) => set({ id }),
   path: '',
   setPath: (path) => set({ path }),
   content: '',
