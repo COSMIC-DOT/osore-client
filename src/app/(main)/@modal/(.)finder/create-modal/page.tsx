@@ -2,7 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import getRepoInfo from '@/apis/note/getRepoInfo';
+import createNote from '@/apis/note/createNote';
 import Modal from '@/components/modal';
 import CloseIcon from '@/icons/close-icon';
 import BranchIcon from '@/icons/branch-icon';
@@ -10,38 +13,27 @@ import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
 import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
 import Dropdwon from '@/components/dropdwon';
 import Loading from '@/components/loading';
-import noteStore from '@/stores/note-store';
-import searchStore from '@/stores/search-store';
-import NoteType from '@/types/note-type';
 
 function CreateModal() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const branchDropdownref = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const [linkInfo, setLinkInfo] = useState({ branch: [] });
-  const [isLoading, setIsLoading] = useState(false);
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
-  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
-  const searchWord = searchStore((state: { searchWord: string }) => state.searchWord);
-  const setSearchedNotes = searchStore(
-    (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
-  );
 
-  const branchDropdownList = linkInfo.branch.map((branch, index) => {
-    const dropdownItem = {
-      id: index,
-      text: branch,
-      handleClick: (event: React.MouseEvent<HTMLButtonElement>) => {
-        const target = event.target as HTMLElement;
-        setSelectedBranch(target.textContent as string);
-        setIsBranchDropdownOpen(false);
-      },
-    };
-    return dropdownItem;
-  });
+  const branchDropdownList = linkInfo.branch.map((branch, index) => ({
+    id: index,
+    text: branch,
+    handleClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+      const target = event.target as HTMLElement;
+      setSelectedBranch(target.textContent as string);
+      setIsBranchDropdownOpen(false);
+    },
+  }));
 
   const closeModal = () => {
     router.back();
@@ -71,15 +63,9 @@ function CreateModal() {
     }
   };
 
-  const searchLink = async () => {
-    try {
-      setIsBranchDropdownOpen(false);
-      setIsLoading(true);
-      const response = await fetch(`/api/repo?url=${urlInputRef.current?.value}`, {
-        method: 'GET',
-      });
-      const data = await response.json();
-      setIsLoading(false);
+  const { mutate: searchLink, isPending: searchLinkIsPending } = useMutation({
+    mutationFn: () => getRepoInfo(urlInputRef.current?.value as string),
+    onSuccess: (data) => {
       setSelectedLink(urlInputRef.current?.value as string);
       setSelectedBranch('');
       if (Object.keys(data).length) {
@@ -88,36 +74,31 @@ function CreateModal() {
         // eslint-disable-next-line no-alert
         alert('해당 URL을 찾을 수 없습니다.');
       }
-    } catch (error) {
+    },
+    onError: (error) => {
       // eslint-disable-next-line no-console
       console.error('Error: ', error);
-    }
-  };
+    },
+  });
 
-  const creataNote = async () => {
-    if (titleInputRef.current?.value && selectedLink && selectedBranch) {
-      try {
-        setIsLoading(true);
-        const response = await fetch('/api/notes', {
-          method: 'POST',
-          body: JSON.stringify({
-            title: titleInputRef.current?.value,
-            url: selectedLink,
-            branch: selectedBranch,
-          }),
-        });
-        const data = await response.json();
-        setNotes(data);
-        const searchedNotes = data.filter((note: NoteType) => note.title.includes(searchWord));
-        setSearchedNotes(searchedNotes);
-        setIsLoading(false);
-        router.back();
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      }
-    }
-  };
+  const { mutate: handleCreateNote, isPending: createNoteIsPending } = useMutation({
+    mutationFn: () =>
+      createNote({
+        title: titleInputRef.current?.value as string,
+        url: selectedLink,
+        branch: selectedBranch,
+      }),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['noteList'], data);
+      router.back();
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error('Error: ', error);
+    },
+  });
+
+  const isLoading = searchLinkIsPending || createNoteIsPending;
 
   return (
     <Modal>
@@ -162,7 +143,7 @@ function CreateModal() {
                   <button
                     type="button"
                     className="text-button h-[48px] w-[72px] rounded-[16px] bg-gray2 text-white"
-                    onClick={searchLink}
+                    onClick={() => searchLink()}
                   >
                     확인
                   </button>
@@ -197,7 +178,9 @@ function CreateModal() {
           <button
             type="button"
             className="text-button flex h-[48px] w-[100%] items-center justify-center rounded-[16px] bg-gray2 px-[24px] py-[12px] text-white"
-            onClick={creataNote}
+            onClick={() => {
+              if (titleInputRef.current?.value && selectedLink && selectedBranch) handleCreateNote();
+            }}
           >
             생성하기
           </button>

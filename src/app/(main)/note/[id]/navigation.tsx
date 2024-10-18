@@ -11,19 +11,24 @@ import GraphIcon from '@/icons/graph-icon';
 import OsoreWhiteIcon from '@/icons/osore-white-icon';
 import { useQuery } from '@tanstack/react-query';
 import getFile from '@/apis/file/get-file';
+import getNoteInfo from '@/apis/note/getNoteInfo';
 
 function Navigation() {
   const router = useRouter();
   const { id } = useParams();
   const pathname = usePathname();
   const [activeButton, setActiveButton] = useState(pathname.split('/')[3]);
-  const [noteInfo, setNoteInfo] = useState({ title: '', branch: '', repository: '' });
   const selectedFileId = selectedFileStore((state: { id: number }) => state.id);
 
   const { data: fileInfo } = useQuery({
     queryKey: ['fileInfo', selectedFileId],
     queryFn: () => getFile(+selectedFileId),
     enabled: selectedFileId !== 0,
+  });
+
+  const { data: noteInfo } = useQuery({
+    queryKey: ['noteInfo', id],
+    queryFn: () => getNoteInfo(id as string),
   });
 
   useEffect(() => {
@@ -47,21 +52,6 @@ function Navigation() {
     };
   }, [id]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await fetch(`/api/notes/${id}`, {
-          method: 'GET',
-        });
-        const data = await response.json();
-        setNoteInfo(data);
-      } catch (error) {
-        // eslint-disable-next-line
-        console.error(error);
-      }
-    })();
-  }, [id]);
-
   const navigatePage = (event: React.MouseEvent<HTMLButtonElement>) => {
     const clickedButton = event.currentTarget.getAttribute('data-value') || '';
     if (clickedButton === 'code') {
@@ -82,13 +72,13 @@ function Navigation() {
   return (
     <div className="mt-[40px] flex h-[112px] flex-col gap-[24px] px-[80px]">
       <div className="flex h-[40px] items-center gap-[20px]">
-        <div className="text-title3">{noteInfo.title}</div>
+        <div className="text-title3">{noteInfo?.title}</div>
         <div className="text-body2 text-gray2">|</div>
-        <div className="text-subtitle1 text-gray4">{noteInfo.repository}</div>
+        <div className="text-subtitle1 text-gray4">{noteInfo?.repository}</div>
         <div className="text-body2 text-gray2">|</div>
         <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
           <BranchIcon2 />
-          <div className="h-[20px]">{noteInfo.branch}</div>
+          <div className="h-[20px]">{noteInfo?.branch}</div>
         </div>
       </div>
 

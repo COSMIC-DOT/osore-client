@@ -1,43 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 
+import getNoteList from '@/apis/note/getNoteList';
+import deleteNote from '@/apis/note/deleteNote';
 import Loading from '@/components/loading';
 import NoteType from '@/types/note-type';
-import noteStore from '@/stores/note-store';
 import searchStore from '@/stores/search-store';
 import Note from './note';
 
 function NoteList() {
-  const [isLoading, setIsLoading] = useState(false);
-  const notes = noteStore((state: { notes: NoteType[] }) => state.notes);
-  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
-  const searchedNotes = searchStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
-  const setSearchedNotes = searchStore(
-    (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
-  );
+  const queryClient = useQueryClient();
+  const searchWord = searchStore((state: { searchWord: string }) => state.searchWord);
+  const { data: noteList, isPending: getNoteListIsPending } = useQuery({
+    queryKey: ['noteList'],
+    queryFn: getNoteList,
+  });
+  const { mutate: handleDeleteNote, isPending: deleteNoteIsPending } = useMutation({
+    mutationFn: (noteId: string) => deleteNote(noteId),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['noteList'], data);
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error('Error: ', error);
+    },
+  });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (!notes.length) {
-          setIsLoading(true);
-          const response = await fetch('/api/notes', {
-            method: 'GET',
-          });
-
-          const data = await response.json();
-          setNotes(data);
-          setSearchedNotes(data);
-        }
-      } catch (error) {
-        // eslint-disable-next-line
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [setNotes, setSearchedNotes]);
+  const isLoading = getNoteListIsPending || deleteNoteIsPending;
 
   return (
     <main className="relative flex min-h-[calc(100vh-240px)] min-w-[100vw] flex-col px-[80px]">
@@ -47,7 +37,11 @@ function NoteList() {
         </div>
       )}
       <div className="flex flex-wrap gap-[40px]">
-        {searchedNotes?.map((note: NoteType) => <Note key={note.id} note={note} setIsLoading={setIsLoading} />)}
+        {noteList
+          ?.filter((note: NoteType) => note.title.includes(searchWord))
+          .map((note: NoteType) => (
+            <Note key={note.id} note={note} handleDeleteNote={() => handleDeleteNote(note.id.toString())} />
+          ))}
       </div>
     </main>
   );

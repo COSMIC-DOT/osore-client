@@ -1,28 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import editNote from '@/apis/note/editNote';
 import NoteType from '@/types/note-type';
 import MeatballsMenuIcon from '@/icons/meatballs-menu-icon';
 import PeopleIcon from '@/icons/people-icon';
 import StarIcon from '@/icons/star-icon';
 import ForkIcon from '@/icons/fork-icon';
 import Dropdwon from '@/components/dropdwon';
-import noteStore from '@/stores/note-store';
-import searchStore from '@/stores/search-store';
 
-function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading: boolean) => void }) {
+function Note({ note, handleDeleteNote }: { note: NoteType; handleDeleteNote: () => void }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const noteTitleInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedNoteTitle, setEditedNoteTilte] = useState(note.title);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const setNotes = noteStore((state: { setNotes: (notes: NoteType[]) => void }) => state.setNotes);
-  const searchedNotes = searchStore((state: { searchedNotes: NoteType[] }) => state.searchedNotes);
-  const setSearchedNotes = searchStore(
-    (state: { setSearchedNotes: (notes: NoteType[]) => void }) => state.setSearchedNotes,
-  );
 
   useEffect(() => {
     setEditedNoteTilte(note.title);
@@ -43,26 +39,7 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     {
       id: 2,
       text: '삭제하기',
-      handleClick: async () => {
-        try {
-          setIsLoading(true);
-          setIsDropdownOpen(false);
-          const response = await fetch(`/api/notes/${note.id}`, {
-            method: 'DELETE',
-          });
-          const data = await response.json();
-          setNotes(data);
-          const newSearchedNotes = data.filter((item: NoteType) =>
-            searchedNotes.map((searchedNote: NoteType) => searchedNote.id).includes(item.id),
-          );
-          setSearchedNotes(newSearchedNotes);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(error);
-        } finally {
-          setIsLoading(false);
-        }
-      },
+      handleClick: handleDeleteNote,
     },
   ];
 
@@ -80,22 +57,25 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     };
   }, [isDropdownOpen]);
 
+  const { mutate: handleEditNote } = useMutation({
+    mutationFn: (title: string) => editNote(note.id.toString(), { title }),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['noteList'], data);
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error('Error: ', error);
+    },
+  });
+
   useEffect(() => {
     const noteTitleInputOutsideClick = async (event: MouseEvent) => {
       try {
-        const title = noteTitleInputRef.current?.value;
+        const title = noteTitleInputRef.current?.value as string;
         if (isEditing && noteTitleInputRef.current !== event.target) {
           setIsEditing(!isEditing);
           if (title !== note.title && title !== '') {
-            const response = await fetch(`/api/notes/${note.id}`, {
-              method: 'PUT',
-              body: JSON.stringify({
-                title,
-              }),
-            });
-            const data = await response.json();
-            setNotes(data);
-            setSearchedNotes(data);
+            handleEditNote(title);
           } else {
             setEditedNoteTilte(note.title);
           }
@@ -111,7 +91,7 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
     return () => {
       document.removeEventListener('click', noteTitleInputOutsideClick);
     };
-  }, [isEditing, note, setNotes, setSearchedNotes]);
+  }, [isEditing, note, handleEditNote]);
 
   const enterNoteTitleInput = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     try {
@@ -119,15 +99,7 @@ function Note({ note, setIsLoading }: { note: NoteType; setIsLoading: (isLoading
       if (event.key === 'Enter') {
         setIsEditing(!isEditing);
         if (title !== note.title && title !== '') {
-          const response = await fetch(`/api/notes/${note.id}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-              title,
-            }),
-          });
-          const data = await response.json();
-          setNotes(data);
-          setSearchedNotes(data);
+          handleEditNote(title);
         } else {
           setEditedNoteTilte(note.title);
         }
