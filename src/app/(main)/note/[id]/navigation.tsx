@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
-import fileStore from '@/stores/file-store';
+import selectedFileStore from '@/stores/selected-file-store';
 import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
 import GraphIcon from '@/icons/graph-icon';
 import OsoreWhiteIcon from '@/icons/osore-white-icon';
+import { useQuery } from '@tanstack/react-query';
+import getFile from '@/apis/file/get-file';
 
 function Navigation() {
   const router = useRouter();
@@ -16,8 +18,13 @@ function Navigation() {
   const pathname = usePathname();
   const [activeButton, setActiveButton] = useState(pathname.split('/')[3]);
   const [noteInfo, setNoteInfo] = useState({ title: '', branch: '', repository: '' });
-  const filePath = fileStore((state: { path: string }) => state.path);
-  const fileId = fileStore((state: { id: number }) => state.id);
+  const selectedFileId = selectedFileStore((state: { id: number }) => state.id);
+
+  const { data: fileInfo } = useQuery({
+    queryKey: ['fileInfo', selectedFileId],
+    queryFn: () => getFile(+selectedFileId),
+    enabled: selectedFileId !== 0,
+  });
 
   useEffect(() => {
     setActiveButton(pathname.split('/')[3]);
@@ -58,7 +65,7 @@ function Navigation() {
   const navigatePage = (event: React.MouseEvent<HTMLButtonElement>) => {
     const clickedButton = event.currentTarget.getAttribute('data-value') || '';
     if (clickedButton === 'code') {
-      router.push(`/note/${id}/${clickedButton}/${fileId}`);
+      router.push(`/note/${id}/${clickedButton}/${selectedFileId}`);
     } else {
       router.push(`/note/${id}/${clickedButton}`);
     }
@@ -86,7 +93,7 @@ function Navigation() {
       </div>
 
       <div className="flex h-[48px] items-center justify-between">
-        <div className="text-subtitle1">{filePath}</div>
+        <div className="text-subtitle1">{fileInfo?.path}</div>
         <div className="flex h-[48px] w-[540px] gap-[12px]">
           <button
             type="button"
