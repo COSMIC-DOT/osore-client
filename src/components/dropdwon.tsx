@@ -21,7 +21,7 @@ function Dropdwon({
     <div className="relative">
       <div
         ref={dropdownRef}
-        className={`absolute z-20 flex max-h-[250px] w-[160px] flex-col overflow-y-auto rounded-[16px] bg-white ${border ? 'border' : 'border-none shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)]'}`}
+        className={`absolute right-0 z-20 flex max-h-[250px] w-[160px] flex-col overflow-y-auto rounded-[16px] bg-white ${border ? 'border' : 'border-none shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)]'}`}
       >
         {dropdownList.map((item) => (
           <button

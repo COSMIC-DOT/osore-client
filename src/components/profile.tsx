@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
-import userStore from '@/stores/user-store';
+import logout from '@/apis/auth/logout';
+import getUserName from '@/apis/auth/get-user-name';
 import ArrowDropdownIcon from '@/icons/arrow-dropdown-icon';
 import ArrowDropupIcon from '@/icons/arrow-dropup-icon';
 import ProfileIcon from '@/icons/profile-icon';
@@ -14,9 +15,17 @@ import Dropdwon from './dropdwon';
 function Profile() {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [user, setUser] = useState({ name: '', avatar: '' });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const setUserName = userStore((state: { setName: (name: string) => void }) => state.setName);
+  const { data: username } = useQuery({ queryKey: ['username'], queryFn: getUserName });
+  const { mutate } = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      router.push('/');
+    },
+    onError: () => {
+      alert('로그아웃에 실패했습니다.');
+    },
+  });
   const dropdownList = [
     {
       id: 1,
@@ -31,35 +40,11 @@ function Profile() {
       icon: <LogoutIcon />,
       text: '로그아웃',
       warning: true,
-      handleClick: async () => {
-        try {
-          await fetch('/api/logout', {
-            method: 'GET',
-          });
-          router.push('/');
-        } catch (error) {
-          // eslint-disable-next-line
-          console.error(error);
-        }
+      handleClick: () => {
+        mutate();
       },
     },
   ];
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await fetch('/api/member', {
-          method: 'GET',
-        });
-        const data = await response.json();
-        setUser(data);
-        setUserName(data.name);
-      } catch (error) {
-        // eslint-disable-next-line
-        console.error(error);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     const dropdownOutsideClick = (event: MouseEvent) => {
@@ -88,11 +73,8 @@ function Profile() {
         role="button"
         tabIndex={0}
       >
-        <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full bg-[#D9D9D9]">
-          <Image className="h-[60px] w-[60px]" src={user.avatar} alt="프로필" width={50} height={50} />
-        </div>
         <div className="text-body2 flex h-[60px] items-center justify-center">
-          {user.name}
+          {username}
           <div className="flex h-[24px] w-[24px] items-center justify-center">
             {isDropdownOpen ? <ArrowDropupIcon /> : <ArrowDropdownIcon />}
           </div>

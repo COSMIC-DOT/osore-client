@@ -3,21 +3,33 @@
 import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
-import fileStore from '@/stores/file-store';
+import selectedFileStore from '@/stores/selected-file-store';
 import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
 import GraphIcon from '@/icons/graph-icon';
 import OsoreWhiteIcon from '@/icons/osore-white-icon';
+import { useQuery } from '@tanstack/react-query';
+import getFile from '@/apis/file/get-file';
+import getNoteInfo from '@/apis/note/getNoteInfo';
 
 function Navigation() {
   const router = useRouter();
   const { id } = useParams();
   const pathname = usePathname();
   const [activeButton, setActiveButton] = useState(pathname.split('/')[3]);
-  const [noteInfo, setNoteInfo] = useState({ title: '', branch: '', repository: '' });
-  const filePath = fileStore((state: { path: string }) => state.path);
-  const fileId = fileStore((state: { id: number }) => state.id);
+  const selectedFileId = selectedFileStore((state: { id: number }) => state.id);
+
+  const { data: fileInfo } = useQuery({
+    queryKey: ['fileInfo', selectedFileId],
+    queryFn: () => getFile(+selectedFileId),
+    enabled: selectedFileId !== 0,
+  });
+
+  const { data: noteInfo } = useQuery({
+    queryKey: ['noteInfo', id],
+    queryFn: () => getNoteInfo(id as string),
+  });
 
   useEffect(() => {
     setActiveButton(pathname.split('/')[3]);
@@ -40,25 +52,10 @@ function Navigation() {
     };
   }, [id]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await fetch(`/api/notes/${id}`, {
-          method: 'GET',
-        });
-        const data = await response.json();
-        setNoteInfo(data);
-      } catch (error) {
-        // eslint-disable-next-line
-        console.error(error);
-      }
-    })();
-  }, [id]);
-
   const navigatePage = (event: React.MouseEvent<HTMLButtonElement>) => {
     const clickedButton = event.currentTarget.getAttribute('data-value') || '';
     if (clickedButton === 'code') {
-      router.push(`/note/${id}/${clickedButton}/${fileId}`);
+      router.push(`/note/${id}/${clickedButton}/${selectedFileId}`);
     } else {
       router.push(`/note/${id}/${clickedButton}`);
     }
@@ -75,18 +72,18 @@ function Navigation() {
   return (
     <div className="mt-[40px] flex h-[112px] flex-col gap-[24px] px-[80px]">
       <div className="flex h-[40px] items-center gap-[20px]">
-        <div className="text-title3">{noteInfo.title}</div>
+        <div className="text-title3">{noteInfo?.title}</div>
         <div className="text-body2 text-gray2">|</div>
-        <div className="text-subtitle1 text-gray4">{noteInfo.repository}</div>
+        <div className="text-subtitle1 text-gray4">{noteInfo?.repository}</div>
         <div className="text-body2 text-gray2">|</div>
         <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
           <BranchIcon2 />
-          <div className="h-[20px]">{noteInfo.branch}</div>
+          <div className="h-[20px]">{noteInfo?.branch}</div>
         </div>
       </div>
 
       <div className="flex h-[48px] items-center justify-between">
-        <div className="text-subtitle1">{filePath}</div>
+        <div className="text-subtitle1">{fileInfo?.path}</div>
         <div className="flex h-[48px] w-[540px] gap-[12px]">
           <button
             type="button"

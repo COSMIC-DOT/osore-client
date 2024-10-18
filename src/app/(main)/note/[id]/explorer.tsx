@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 
-import fileStore from '@/stores/file-store';
+import getFileList from '@/apis/file/get-file-list';
+import selectedFileStore from '@/stores/selected-file-store';
 import ArrowDropRightIcon from '@/icons/arrow-dropright-icon';
 import CloseFolderIcon from '@/icons/close-folder-icon';
 import FileIcon from '@/icons/file-icon';
@@ -19,40 +21,43 @@ interface FileType {
   isOpen?: boolean;
 }
 
-function Explorer({ rootFile }: { rootFile: FileType | null }) {
+function Explorer() {
   const router = useRouter();
   const { id } = useParams();
-  const [fileList, setFileList] = useState(rootFile);
+  const [fileList, setFileList] = useState<FileType>();
   const folderRef = useRef<HTMLDivElement | null>(null);
-  const setFilepath = fileStore((state: { setPath: (path: string) => void }) => state.setPath);
-  const setFileContent = fileStore((state: { setContent: (content: string) => void }) => state.setContent);
-  const setFileLanguage = fileStore((state: { setLanguage: (langauge: string) => void }) => state.setLanguage);
-  const setFileId = fileStore((state: { setId: (id: number) => void }) => state.setId);
+  const setSelectedFileId = selectedFileStore((state: { setId: (id: number) => void }) => state.setId);
+  const { data: rootFileList } = useQuery<FileType>({
+    queryKey: ['fileList', id],
+    queryFn: () => getFileList(+id),
+  });
 
-  const openFile = (event: MouseEvent | KeyboardEvent) => {
+  const openFile = (event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     const fileId = event.currentTarget.getAttribute('data-value') || '';
-    setFileId(fileId);
+    setSelectedFileId(+fileId);
     router.push(`/note/${id}/code/${fileId}`);
   };
 
   useEffect(() => {
-    const isReadme = rootFile?.children.some(
-      (child) => (child.name === 'README' || child.name === 'readme') && child.extension === 'md',
-    );
+    if (rootFileList) {
+      setFileList(rootFileList);
+      const isReadme = rootFileList.children.some(
+        (child) => (child.name === 'README' || child.name === 'readme') && child.extension === 'md',
+      );
 
-    if (!isReadme) {
-      setFileContent('');
-      setFileLanguage('');
-      setFilepath('');
-      router.replace(`/note/${id}`);
-    } else {
-      rootFile?.children.forEach((child) => {
-        if ((child.name === 'README' || child.name === 'readme') && child.extension === 'md') {
-          router.replace(`/note/${id}/code/${child.id.toString()}`);
-        }
-      });
+      if (!isReadme) {
+        console.log('a');
+        router.replace(`/note/${id}`);
+      } else {
+        rootFileList.children.forEach((child) => {
+          if ((child.name === 'README' || child.name === 'readme') && child.extension === 'md') {
+            router.replace(`/note/${id}/code/${child.id.toString()}`);
+            setSelectedFileId(child.id);
+          }
+        });
+      }
     }
-  }, []);
+  }, [rootFileList]);
 
   const toggleFolder = (child: FileType) => {
     const toggleChild = (item: FileType): FileType => {
@@ -76,7 +81,7 @@ function Explorer({ rootFile }: { rootFile: FileType | null }) {
     }
   };
 
-  function createFileTree(list: FileType | null) {
+  function createFileTree(list: FileType | undefined) {
     return list?.children.map((child: FileType) => (
       <div>
         {child.type === 'file' ? (

@@ -1,6 +1,8 @@
 import '@/styles/global.css';
 import type { Metadata } from 'next';
 
+import Providers from '@/app/providers';
+
 export const metadata: Metadata = {
   title: '오소리',
   icons: {
@@ -11,7 +13,9 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
