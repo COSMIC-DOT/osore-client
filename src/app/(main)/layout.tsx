@@ -19,9 +19,9 @@ export default async function RootLayout({ children, modal }: { children: React.
   }
 
   return (
-    <body className="flex w-[100%] justify-center">
-      <div>
-        <Header />
+    <body className="flex w-[100%] flex-col items-center justify-center pb-[43px]">
+      <Header />
+      <div className="w-[1440px]">
         {children}
         {modal}
       </div>
