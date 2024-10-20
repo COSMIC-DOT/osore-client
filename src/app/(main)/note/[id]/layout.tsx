@@ -11,7 +11,7 @@ export default async function NoteLayout({
   return (
     <div>
       <Navigation />
-      <div className="mt-[29px] flex gap-[20px] px-[80px] pb-[43px]">
+      <div className="mt-[29px] flex gap-[12px] px-[80px] pb-[43px]">
         <Explorer />
         {children}
         {chatbot}

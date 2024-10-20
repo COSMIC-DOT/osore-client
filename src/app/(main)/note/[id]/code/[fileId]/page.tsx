@@ -18,7 +18,7 @@ function Code() {
   });
 
   return (
-    <div className="h-[717px] w-full overflow-y-auto rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)] scrollbar-hide">
+    <div className="h-[717px] w-[1016px] overflow-y-auto rounded-[28px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)] scrollbar-hide">
       {fileInfo?.language === 'markdown' ? (
         <div className="p-[12px]">
           <ReactMarkdown rehypePlugins={[rehypeHighlight, rehypeRaw]}>{fileInfo?.content}</ReactMarkdown>

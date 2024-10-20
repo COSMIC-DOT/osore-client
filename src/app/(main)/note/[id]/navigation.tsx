@@ -18,6 +18,9 @@ function Navigation() {
   const { id } = useParams();
   const pathname = usePathname();
   const [activeButton, setActiveButton] = useState(pathname.split('/')[3]);
+  const [codeHover, setCodeHover] = useState(false);
+  const [graphHover, setGraphHover] = useState(false);
+  const [memoHover, setMemoHover] = useState(false);
   const selectedFileId = selectedFileStore((state: { id: number }) => state.id);
 
   const { data: fileInfo } = useQuery({
@@ -87,29 +90,56 @@ function Navigation() {
         <div className="flex h-[48px] w-[540px] gap-[12px]">
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'code' ? 'bg-primary_light text-primary_dark' : 'bg-primary hover:bg-primary_dark'} px-[20px] py-[12px] text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'code' ? 'bg-primary' : 'bg-primary_light text-primary'} px-[20px] py-[12px] text-white hover:bg-primary_dark hover:text-white`}
             onClick={navigatePage}
+            onMouseOver={() => {
+              setCodeHover(true);
+            }}
+            onFocus={() => {
+              setCodeHover(true);
+            }}
+            onMouseLeave={() => {
+              setCodeHover(false);
+            }}
             data-value="code"
           >
-            {activeButton === 'code' ? <CodeIcon color="#3617B3" /> : <CodeIcon color="#FFFFFF" />}
+            {activeButton === 'code' || codeHover ? <CodeIcon color="#FFFFFF" /> : <CodeIcon color="#4E60FF" />}
             <div className="h-[20px]">CODE</div>
           </button>
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'graph' ? 'bg-primary_light text-primary_dark' : 'bg-primary hover:bg-primary_dark'} px-[20px] py-[12px] text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] text-white ${activeButton === 'graph' ? 'bg-primary' : 'bg-primary_light text-primary'} px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
             onClick={navigatePage}
+            onMouseOver={() => {
+              setGraphHover(true);
+            }}
+            onFocus={() => {
+              setGraphHover(true);
+            }}
+            onMouseLeave={() => {
+              setGraphHover(false);
+            }}
             data-value="graph"
           >
-            {activeButton === 'graph' ? <GraphIcon color="#3617B3" /> : <GraphIcon color="#FFFFFF" />}
+            {activeButton === 'graph' || graphHover ? <GraphIcon color="#FFFFFF" /> : <GraphIcon color="#4E60FF" />}
             <div className="h-[20px]">GRAPH</div>
           </button>
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'memo' ? 'bg-primary_light text-primary_dark' : 'bg-primary hover:bg-primary_dark'} px-[20px] py-[12px] text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] text-white ${activeButton === 'memo' ? 'bg-primary' : 'bg-primary_light text-primary'} px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
             onClick={navigatePage}
+            onMouseOver={() => {
+              setMemoHover(true);
+            }}
+            onFocus={() => {
+              setMemoHover(true);
+            }}
+            onMouseLeave={() => {
+              setMemoHover(false);
+            }}
             data-value="memo"
           >
-            {activeButton === 'memo' ? <DocsIcon color="#3617B3" /> : <DocsIcon color="#FFFFFF" />}
+            {activeButton === 'memo' || memoHover ? <DocsIcon color="#FFFFFF" /> : <DocsIcon color="#4E60FF" />}
             <div className="h-[20px]">메모</div>
           </button>
           <button
