@@ -3,7 +3,7 @@ import NoteList from './(main)/note-list';
 
 export default function Main() {
   return (
-    <div className="bg-gray0 pt-[40px]">
+    <div className="flex w-[100vw] flex-col items-center pt-[40px]">
       <Navigation />
       <NoteList />
     </div>

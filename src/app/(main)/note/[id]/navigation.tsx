@@ -70,7 +70,7 @@ function Navigation() {
   };
 
   return (
-    <div className="mt-[40px] flex h-[112px] flex-col gap-[24px] px-[80px]">
+    <div className="mt-[40px] flex h-[112px] w-[1440px] flex-col gap-[24px] px-[80px]">
       <div className="flex h-[40px] items-center gap-[20px]">
         <div className="text-title3">{noteInfo?.title}</div>
         <div className="text-body2 text-gray2">|</div>
