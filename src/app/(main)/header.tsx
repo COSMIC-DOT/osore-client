@@ -25,7 +25,7 @@ function Header() {
   });
 
   return (
-    <header className="flex w-[100vw] justify-center border border-white border-b-gray1 bg-white">
+    <header className="flex w-[100vw] min-w-[1440px] justify-center border border-white border-b-gray1 bg-white">
       <div className="flex h-[120px] w-[1440px] items-center justify-between px-[80px]">
         <div
           className="flex h-[47px] w-[223px] items-center justify-between"

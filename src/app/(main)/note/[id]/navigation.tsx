@@ -87,34 +87,34 @@ function Navigation() {
         <div className="flex h-[48px] w-[540px] gap-[12px]">
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'code' ? 'bg-secondary_light text-secondary_dark' : 'bg-secondary hover:bg-secondary_dark'} px-[20px] py-[12px] text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'code' ? 'bg-primary_light text-primary_dark' : 'bg-primary hover:bg-primary_dark'} px-[20px] py-[12px] text-white`}
             onClick={navigatePage}
             data-value="code"
           >
-            {activeButton === 'code' ? <CodeIcon color="#00B0A9" /> : <CodeIcon color="#FFFFFF" />}
-            <div className="h-[18px]">CODE</div>
+            {activeButton === 'code' ? <CodeIcon color="#3617B3" /> : <CodeIcon color="#FFFFFF" />}
+            <div className="h-[20px]">CODE</div>
           </button>
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'graph' ? 'bg-secondary_light text-secondary_dark' : 'bg-secondary hover:bg-secondary_dark'} px-[20px] py-[12px] text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'graph' ? 'bg-primary_light text-primary_dark' : 'bg-primary hover:bg-primary_dark'} px-[20px] py-[12px] text-white`}
             onClick={navigatePage}
             data-value="graph"
           >
-            {activeButton === 'graph' ? <GraphIcon color="#00B0A9" /> : <GraphIcon color="#FFFFFF" />}
-            <div className="h-[18px]">GRAPH</div>
+            {activeButton === 'graph' ? <GraphIcon color="#3617B3" /> : <GraphIcon color="#FFFFFF" />}
+            <div className="h-[20px]">GRAPH</div>
           </button>
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'memo' ? 'bg-secondary_light text-secondary_dark' : 'bg-secondary hover:bg-secondary_dark'} px-[20px] py-[12px] text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'memo' ? 'bg-primary_light text-primary_dark' : 'bg-primary hover:bg-primary_dark'} px-[20px] py-[12px] text-white`}
             onClick={navigatePage}
             data-value="memo"
           >
-            {activeButton === 'memo' ? <DocsIcon color="#00B0A9" /> : <DocsIcon color="#FFFFFF" />}
-            <div className="h-[18px]">메모</div>
+            {activeButton === 'memo' ? <DocsIcon color="#3617B3" /> : <DocsIcon color="#FFFFFF" />}
+            <div className="h-[20px]">메모</div>
           </button>
           <button
             type="button"
-            className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-secondary px-[20px] py-[12px] text-white hover:bg-secondary_dark"
+            className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-primary px-[20px] py-[12px] text-white hover:bg-primary_dark"
             onClick={askChatBot}
           >
             <OsoreWhiteIcon />
