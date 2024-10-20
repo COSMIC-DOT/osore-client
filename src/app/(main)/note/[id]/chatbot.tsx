@@ -7,19 +7,38 @@ import chatbotStore from '@/stores/chatbot-store';
 import CloseIcon from '@/icons/close-icon';
 import OsoreDarkIcon from '@/icons/osore-dark-icon';
 import SendIcon from '@/icons/send-icon';
+import { useState, useEffect } from 'react';
 
 function ChatBot() {
   const { data: username } = useQuery({ queryKey: ['username'], queryFn: getUserName });
   const isChatBotOpen = chatbotStore((state: { isOpen: boolean }) => state.isOpen);
   const setIsChatBotOpen = chatbotStore((state: { setIsOpen: (isOpen: boolean) => void }) => state.setIsOpen);
+  const [isChatBotRender, setIsChatBotRender] = useState(isChatBotOpen);
+  const [isAnimaitionStart, setIsAnimaitionStart] = useState(false);
 
   const closeChatBot = () => {
     setIsChatBotOpen(false);
   };
 
-  if (isChatBotOpen) {
-    return (
-      <div className="absolute right-0 flex h-[713px] w-[480px] flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]">
+  useEffect(() => {
+    if (isChatBotOpen) {
+      setIsChatBotRender(true);
+      setTimeout(() => {
+        setIsAnimaitionStart(true);
+      }, 100);
+    } else {
+      setIsAnimaitionStart(false);
+      setTimeout(() => {
+        setIsChatBotRender(false);
+      }, 500);
+    }
+  }, [isChatBotOpen]);
+
+  return (
+    isChatBotRender && (
+      <div
+        className={`chat-bot-backdrop ${isAnimaitionStart && 'chat-bot-open'} absolute right-0 flex h-[713px] w-[480px] flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]`}
+      >
         <div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[4px]">
@@ -45,14 +64,14 @@ function ChatBot() {
 
         <div className="flex h-[52px] w-[440px] items-center gap-[12px]">
           <input
-            className="placeholder:text-button flex h-[45px] w-[388px] items-center rounded-[16px] bg-gray1 px-[20px] py-[12px]"
+            className="placeholder:text-button flex h-[45px] w-[388px] items-center rounded-[16px] bg-gray1 px-[20px] py-[12px] focus:outline-primary"
             placeholder="소리에게 물어보기"
           />
           <SendIcon />
         </div>
       </div>
-    );
-  }
+    )
+  );
 }
 
 export default ChatBot;
