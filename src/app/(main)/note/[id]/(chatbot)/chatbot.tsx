@@ -25,6 +25,12 @@ function ChatBot() {
   const [isChatRoom, setIsChatRoom] = useState(true);
   const [selectedChatRoomId, setSelectedChatRoomId] = useState(chatRoomList?.[0]?.id || null);
 
+  useEffect(() => {
+    if (!selectedChatRoomId) {
+      setSelectedChatRoomId(chatRoomList?.[0]?.chatRoomId || null);
+    }
+  }, [chatRoomList]);
+
   const closeChatBot = () => {
     setIsChatBotOpen(false);
   };
@@ -85,7 +91,11 @@ function ChatBot() {
             </button>
           </div>
         </div>
-        {isChatRoom ? <ChatRoom selectedChatRoomId={selectedChatRoomId} /> : <ChatRoomList />}
+        {isChatRoom ? (
+          <ChatRoom selectedChatRoomId={selectedChatRoomId} />
+        ) : (
+          <ChatRoomList setIsChatRoom={setIsChatRoom} setSelectedChatRoomId={setSelectedChatRoomId} />
+        )}
       </div>
     )
   );
