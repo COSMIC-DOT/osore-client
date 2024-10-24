@@ -1,11 +1,13 @@
 import getInstance from '@/apis/instance';
 
-async function createChatRoom(noteId: string) {
+async function sendChat(noteId: string, roomId: string, chat: string) {
   const instance = await getInstance();
   const { data } = await instance.post(
-    `/api/chat-room`,
+    `/api/chat`,
     JSON.stringify({
       noteId: +noteId,
+      roomId: +roomId,
+      chat,
     }),
   );
 
@@ -14,4 +16,4 @@ async function createChatRoom(noteId: string) {
   return chatRoomList;
 }
 
-export default createChatRoom;
+export default sendChat;

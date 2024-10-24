@@ -13,6 +13,7 @@ import OsoreDarkIcon from '@/icons/osore-dark-icon';
 import TimerIcon from '@/icons/timer-icon';
 import PlusIcon from '@/icons/plus-icon';
 import createChatRoom from '@/apis/chat/create-chat-room';
+import Loading from '@/components/loading';
 
 function ChatBot() {
   const { id }: { id: string } = useParams();
@@ -35,7 +36,7 @@ function ChatBot() {
     setIsChatBotOpen(false);
   };
 
-  const { mutate } = useMutation({
+  const { mutate: handleCreateRoom, isPending } = useMutation({
     mutationFn: () => createChatRoom(id),
     onSuccess: (data) => {
       queryClient.setQueryData(['chatRoomList', id], data.chattingRoomList);
@@ -66,6 +67,11 @@ function ChatBot() {
       <div
         className={`chat-bot-backdrop ${isAnimaitionStart && 'chat-bot-open'} absolute right-0 flex h-[713px] w-[480px] flex-col gap-[12px] rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]`}
       >
+        {isPending && (
+          <div className="absolute left-0 top-[-120px] z-50 flex h-[calc(100vh-120px)] w-full items-center justify-center">
+            <Loading />
+          </div>
+        )}
         <div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[8px]">
@@ -79,7 +85,7 @@ function ChatBot() {
               <button
                 type="button"
                 onClick={() => {
-                  mutate();
+                  handleCreateRoom();
                 }}
                 className="h-[32px] w-[32px] rounded-[8px] bg-secondary p-[4px]"
               >
