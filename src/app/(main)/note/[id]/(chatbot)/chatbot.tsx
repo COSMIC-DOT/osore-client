@@ -71,11 +71,7 @@ function ChatBot() {
       <div
         className={`chat-bot-backdrop ${isAnimaitionStart && 'chat-bot-open'} absolute right-0 flex h-[713px] w-[480px] flex-col gap-[12px] rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]`}
       >
-        {isPending && (
-          <div className="absolute left-0 top-[-120px] z-50 flex h-[calc(100vh-120px)] w-full items-center justify-center">
-            <Loading />
-          </div>
-        )}
+        {isPending && <Loading />}
         <div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[8px]">

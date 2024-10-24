@@ -178,7 +178,7 @@ function ChatRoom({ selectedChatRoomId }: { selectedChatRoomId: number }) {
         className="flex h-[52px] w-[440px] items-center gap-[12px]"
         onSubmit={(event) => {
           event.preventDefault();
-          if (!isChatTyping) {
+          if (!isChatTyping && inputRef.current?.value !== '') {
             handleSendChat();
           }
         }}
