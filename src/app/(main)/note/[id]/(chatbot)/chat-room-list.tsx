@@ -7,7 +7,16 @@ import ChatRoomType from '@/types/chat-room-type';
 function ChatRoomList() {
   const { id }: { id: string } = useParams();
   const { data: chatRoomList } = useQuery({ queryKey: ['chatRoomList', id], queryFn: () => getChatRoomList(id) });
-  return <div>{chatRoomList?.map((chatRoom: ChatRoomType) => <div key={chatRoom.id}>{chatRoom.title}</div>)}</div>;
+
+  return (
+    <div className="pt-[18px]">
+      {chatRoomList?.map((chatRoom: ChatRoomType) => (
+        <div key={chatRoom.id} className="text-button cursor-pointer p-[12px]">
+          {chatRoom.title}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default ChatRoomList;

@@ -1,5 +1,5 @@
 export default interface ChatRoomType {
-  id: number;
+  chatRoomId: number;
   title: string;
   chats: ChatType[];
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import ChatRoom from '@/app/(main)/note/[id]/(chatbot)/chat-room';
 import ChatRoomList from '@/app/(main)/note/[id]/(chatbot)/chat-room-list';
@@ -12,9 +12,11 @@ import CloseIcon from '@/icons/close-icon';
 import OsoreDarkIcon from '@/icons/osore-dark-icon';
 import TimerIcon from '@/icons/timer-icon';
 import PlusIcon from '@/icons/plus-icon';
+import createChatRoom from '@/apis/chat/create-chat-room';
 
 function ChatBot() {
   const { id }: { id: string } = useParams();
+  const queryClient = useQueryClient();
   const { data: chatRoomList } = useQuery({ queryKey: ['chatRoomList', id], queryFn: () => getChatRoomList(id) });
   const isChatBotOpen = chatbotStore((state: { isOpen: boolean }) => state.isOpen);
   const setIsChatBotOpen = chatbotStore((state: { setIsOpen: (isOpen: boolean) => void }) => state.setIsOpen);
@@ -26,6 +28,18 @@ function ChatBot() {
   const closeChatBot = () => {
     setIsChatBotOpen(false);
   };
+
+  const { mutate } = useMutation({
+    mutationFn: () => createChatRoom(id),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['chatRoomList', id], data.chattingRoomList);
+      setSelectedChatRoomId(data.chatRoomId);
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error('Error: ', error);
+    },
+  });
 
   useEffect(() => {
     if (isChatBotOpen) {
@@ -56,7 +70,13 @@ function ChatBot() {
               <button type="button" onClick={() => setIsChatRoom(!isChatRoom)}>
                 <TimerIcon />
               </button>
-              <button type="button" className="h-[32px] w-[32px] rounded-[8px] bg-secondary p-[4px]">
+              <button
+                type="button"
+                onClick={() => {
+                  mutate();
+                }}
+                className="h-[32px] w-[32px] rounded-[8px] bg-secondary p-[4px]"
+              >
                 <PlusIcon />
               </button>
             </div>

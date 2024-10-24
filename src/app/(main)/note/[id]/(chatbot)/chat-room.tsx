@@ -16,13 +16,13 @@ function ChatRoom({ selectedChatRoomId }: { selectedChatRoomId: number }) {
   const [selectedChatRoom, setSelectedChatRoom] = useState<ChatRoomType | null>(null);
 
   useEffect(() => {
-    const room = chatRoomList.find((chatRoom: ChatRoomType) => chatRoom.id === selectedChatRoomId);
+    const room = chatRoomList.find((chatRoom: ChatRoomType) => chatRoom.chatRoomId === selectedChatRoomId);
     setSelectedChatRoom(room);
   }, [selectedChatRoomId]);
 
   return (
     <div className="flex flex-col gap-[12px]">
-      {selectedChatRoom?.chats ? (
+      {selectedChatRoom?.chats.length !== 0 ? (
         <div>채팅 리스트 불러오기</div>
       ) : (
         <div className="flex h-[564px] items-center justify-center">
@@ -33,7 +33,7 @@ function ChatRoom({ selectedChatRoomId }: { selectedChatRoomId: number }) {
             <div className="text-body3 flex flex-col gap-[12px]">
               <div>1. 이 저장소는 어떤 프로그래밍 언어로 작성되었나요?</div>
               <div>2. 코드의 구조나 디렉토리 구조는 어떻게 되어 있나요?</div>
-              <div>3. 이 저장소는 어떤 프레임워크나 라이브러리를 사용하나요?</div>
+              <div>3. 이 저장소는 어떤 프레임워크나 라이브러리를 사용하나요?{selectedChatRoom.chatRoomId}</div>
             </div>
           </div>
         </div>
