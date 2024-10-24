@@ -216,3 +216,15 @@ code {
     opacity: 0;
   }
 }
+
+.chat-bot-backdrop {
+  visibility: hidden;
+  transform: translateX(120%);
+  transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+  transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
+
+.chat-bot-backdrop.chat-bot-open {
+  visibility: visible;
+  transform: translateX(0);
+}

@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import selectedFileStore from '@/stores/selected-file-store';
+import chatbotStore from '@/stores/chatbot-store';
 import BranchIcon2 from '@/icons/branch-icon-2';
 import CodeIcon from '@/icons/code-icon';
 import DocsIcon from '@/icons/docs-icon';
 import GraphIcon from '@/icons/graph-icon';
 import OsoreWhiteIcon from '@/icons/osore-white-icon';
+import OsorePrimaryIcon from '@/icons/osore-primary-icon';
 import { useQuery } from '@tanstack/react-query';
 import getFile from '@/apis/file/get-file';
 import getNoteInfo from '@/apis/note/getNoteInfo';
@@ -21,7 +23,10 @@ function Navigation() {
   const [codeHover, setCodeHover] = useState(false);
   const [graphHover, setGraphHover] = useState(false);
   const [memoHover, setMemoHover] = useState(false);
+  const [chatBotHover, setChatBotHover] = useState(false);
   const selectedFileId = selectedFileStore((state: { id: number }) => state.id);
+  const isChatBotOpen = chatbotStore((state: { isOpen: boolean }) => state.isOpen);
+  const setIsChatBotOpen = chatbotStore((state: { setIsOpen: (isOpen: boolean) => void }) => state.setIsOpen);
 
   const { data: fileInfo } = useQuery({
     queryKey: ['fileInfo', selectedFileId],
@@ -65,11 +70,7 @@ function Navigation() {
   };
 
   const askChatBot = () => {
-    if (pathname.split('/').includes('chat-bot')) {
-      router.back();
-    } else {
-      router.push(`${pathname}/chat-bot`);
-    }
+    setIsChatBotOpen(!isChatBotOpen);
   };
 
   return (
@@ -81,7 +82,7 @@ function Navigation() {
         <div className="text-body2 text-gray2">|</div>
         <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
           <BranchIcon2 />
-          <div className="h-[20px]">{noteInfo?.branch}</div>
+          <div className="h-[22px]">{noteInfo?.branch}</div>
         </div>
       </div>
 
@@ -90,7 +91,7 @@ function Navigation() {
         <div className="flex h-[48px] w-[540px] gap-[12px]">
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'code' ? 'bg-primary' : 'bg-primary_light text-primary'} px-[20px] py-[12px] text-white hover:bg-primary_dark hover:text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'code' ? 'bg-primary text-white' : 'bg-primary_light text-primary'} px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
             onClick={navigatePage}
             onMouseOver={() => {
               setCodeHover(true);
@@ -108,7 +109,7 @@ function Navigation() {
           </button>
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] text-white ${activeButton === 'graph' ? 'bg-primary' : 'bg-primary_light text-primary'} px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'graph' ? 'bg-primary text-white' : 'bg-primary_light text-primary'} px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
             onClick={navigatePage}
             onMouseOver={() => {
               setGraphHover(true);
@@ -126,7 +127,7 @@ function Navigation() {
           </button>
           <button
             type="button"
-            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] text-white ${activeButton === 'memo' ? 'bg-primary' : 'bg-primary_light text-primary'} px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
+            className={`text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] ${activeButton === 'memo' ? 'bg-primary text-white' : 'bg-primary_light text-primary'} px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
             onClick={navigatePage}
             onMouseOver={() => {
               setMemoHover(true);
@@ -144,11 +145,21 @@ function Navigation() {
           </button>
           <button
             type="button"
-            className="text-button flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] bg-primary px-[20px] py-[12px] text-white hover:bg-primary_dark"
+            className={`text-button ${isChatBotOpen ? 'bg-primary text-white' : 'bg-primary_light text-primary'} flex w-[126px] items-center justify-center gap-[8px] rounded-[16px] px-[20px] py-[12px] hover:bg-primary_dark hover:text-white`}
             onClick={askChatBot}
+            onMouseOver={() => {
+              setChatBotHover(true);
+            }}
+            onFocus={() => {
+              setChatBotHover(true);
+            }}
+            onMouseLeave={() => {
+              setChatBotHover(false);
+            }}
           >
-            <OsoreWhiteIcon />
-            <div className="h-[18px]">ASK 소리</div>
+            {isChatBotOpen || chatBotHover ? <OsoreWhiteIcon /> : <OsorePrimaryIcon />}
+
+            <div className="h-[20px]">ASK 소리</div>
           </button>
         </div>
       </div>

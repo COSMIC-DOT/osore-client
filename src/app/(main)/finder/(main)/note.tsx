@@ -196,7 +196,7 @@ function Note({ note, handleDeleteNote }: { note: NoteType; handleDeleteNote: ()
           {isEditing ? (
             <input
               ref={noteTitleInputRef}
-              className="text-subtitle1"
+              className="text-subtitle1 focus:outline-primary"
               value={editedNoteTitle}
               onChange={handleNoteTitleChange}
               onKeyDown={enterNoteTitleInput}

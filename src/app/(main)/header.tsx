@@ -6,11 +6,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import exitNote from '@/apis/note/exitNote';
 import Profile from '@/components/profile';
+import chatbotStore from '@/stores/chatbot-store';
 
 function Header() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { id } = useParams();
+  const setIsChatBotOpen = chatbotStore((state: { setIsOpen: (isOpen: boolean) => void }) => state.setIsOpen);
 
   const { mutate: goToFinder } = useMutation({
     mutationFn: () => exitNote(id as string),
@@ -29,8 +31,14 @@ function Header() {
       <div className="flex h-[120px] w-[1440px] items-center justify-between px-[80px]">
         <div
           className="flex h-[47px] w-[223px] items-center justify-between"
-          onClick={() => goToFinder()}
-          onKeyDown={() => goToFinder()}
+          onClick={() => {
+            goToFinder();
+            setIsChatBotOpen(false);
+          }}
+          onKeyDown={() => {
+            goToFinder();
+            setIsChatBotOpen(false);
+          }}
           tabIndex={0}
           role="button"
         >

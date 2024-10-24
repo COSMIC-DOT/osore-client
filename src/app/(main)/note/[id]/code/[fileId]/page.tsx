@@ -33,6 +33,7 @@ function Code() {
             value={fileInfo?.content}
             options={{
               fontSize: 16,
+              domReadOnly: true,
               readOnly: true,
               minimap: {
                 enabled: false,
