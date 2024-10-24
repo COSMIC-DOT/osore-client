@@ -1,4 +1,4 @@
-import Chatbot from '@/app/(main)/note/[id]/chatbot';
+import Chatbot from '@/app/(main)/note/[id]/(chatbot)/chatbot';
 import Explorer from '@/app/(main)/note/[id]/explorer';
 import Navigation from './navigation';
 
