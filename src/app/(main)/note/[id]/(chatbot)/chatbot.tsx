@@ -36,6 +36,10 @@ function ChatBot() {
     setIsChatBotOpen(false);
   };
 
+  useEffect(() => {
+    setIsChatRoom(true);
+  }, [isChatBotOpen]);
+
   const { mutate: handleCreateRoom, isPending } = useMutation({
     mutationFn: () => createChatRoom(id),
     onSuccess: (data) => {

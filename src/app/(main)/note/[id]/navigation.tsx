@@ -82,7 +82,7 @@ function Navigation() {
         <div className="text-body2 text-gray2">|</div>
         <div className="text-subtitle1 flex h-[40px] items-center gap-[4px] rounded-[20px] bg-gray1  px-[16px] text-gray4">
           <BranchIcon2 />
-          <div className="h-[20px]">{noteInfo?.branch}</div>
+          <div className="h-[22px]">{noteInfo?.branch}</div>
         </div>
       </div>
 

@@ -46,7 +46,6 @@ function Explorer() {
       );
 
       if (!isReadme) {
-        console.log('a');
         router.replace(`/note/${id}`);
       } else {
         rootFileList.children.forEach((child) => {
