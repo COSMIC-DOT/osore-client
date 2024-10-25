@@ -5,9 +5,11 @@ import getChatRoomList from '@/apis/chat/get-chat-room-list';
 import ChatRoomType from '@/types/chat-room-type';
 
 function ChatRoomList({
+  selectedChatRoomId,
   setIsChatRoom,
   setSelectedChatRoomId,
 }: {
+  selectedChatRoomId: number;
   setIsChatRoom: (isChatRoom: boolean) => void;
   setSelectedChatRoomId: (selectedChatRoomId: number) => void;
 }) {
@@ -26,7 +28,7 @@ function ChatRoomList({
         <div
           key={chatRoom.chatRoomId}
           data-key={chatRoom.chatRoomId}
-          className="text-button cursor-pointer p-[12px]"
+          className={`text-subtitle1 w-[440px] cursor-pointer p-[12px] ${selectedChatRoomId === chatRoom.chatRoomId ? 'bg-gray1' : ''} rounded-[12px]`}
           onClick={changeChatRoom}
           onKeyDown={changeChatRoom}
           tabIndex={0}

@@ -100,7 +100,11 @@ function ChatBot() {
         {isChatRoom ? (
           <ChatRoom selectedChatRoomId={selectedChatRoomId} />
         ) : (
-          <ChatRoomList setIsChatRoom={setIsChatRoom} setSelectedChatRoomId={setSelectedChatRoomId} />
+          <ChatRoomList
+            selectedChatRoomId={selectedChatRoomId}
+            setIsChatRoom={setIsChatRoom}
+            setSelectedChatRoomId={setSelectedChatRoomId}
+          />
         )}
       </div>
     )
