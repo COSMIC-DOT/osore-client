@@ -18,7 +18,20 @@ module.exports = {
       secondary_dark: '#00B0A9',
       error: '#FF5F4A',
     },
-    extend: {},
+    extend: {
+      zIndex: {
+        0: '0',
+        1: '1',
+        2: '2',
+        3: '3',
+        4: '4',
+        5: '5',
+        6: '6',
+        7: '7',
+        8: '8',
+        9: '9',
+      },
+    },
   },
   plugins: [require('tailwind-scrollbar-hide')],
 };

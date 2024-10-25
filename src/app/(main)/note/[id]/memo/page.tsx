@@ -13,6 +13,7 @@ import createMemo from '@/apis/memo/create-memo';
 import PlusIcon from '@/icons/plus-icon';
 import PencilIcon from '@/icons/pencil-icon';
 import editMemo from '@/apis/memo/edit-memo';
+import MemoBackground from '@/app/(main)/note/[id]/memo/memo-background';
 
 function Memo() {
   const queryClient = useQueryClient();
@@ -107,9 +108,10 @@ function Memo() {
   }, [isEditing]);
 
   return (
-    <div className="flex h-[717px] w-[1012px] flex-col bg-white px-[24px] pb-[24px] pt-[12px]">
-      <div className="flex">
-        <div className="flex h-[32px] w-[904px] gap-[53px]">
+    <div className="relative flex h-[717px] w-[1012px] flex-col px-[24px] pb-[24px] pt-[12px]">
+      <MemoBackground memoList={memoList || []} selectedMemoId={selectedMemoId} />
+      <div className="z-10 flex ">
+        <div className="flex h-[32px] w-[900px] gap-[52px]">
           {memoList?.map(
             (memoId: string, index: number) =>
               index !== 8 && (
@@ -153,15 +155,15 @@ function Memo() {
         <textarea
           ref={textAreaRef}
           value={editedMemo}
-          className="text-body1 mb-[20px] mt-[24px] h-[553px] w-[964px] resize-none  border border-secondary_light p-[12px] outline-secondary"
+          className="text-body1 z-10 mb-[20px] mt-[24px] h-[553px] w-[964px] resize-none  border border-secondary_light p-[12px] outline-secondary"
           onChange={(event) => setEditedMemo(event.target.value)}
         />
       ) : (
-        <div className="mb-[20px] mt-[24px] h-[553px] w-[964px]">
+        <div className="z-10 mb-[20px] mt-[24px] h-[553px] w-[964px]">
           <ReactMarkdown rehypePlugins={[rehypeHighlight, rehypeRaw]}>{memo}</ReactMarkdown>
         </div>
       )}
-      <div className="flex h-[48px] w-[964px] justify-end ">
+      <div className="z-10 flex h-[48px] w-[964px] justify-end ">
         <button
           type="button"
           className="text-button flex h-[48px] w-[120px] items-center gap-[8px] rounded-[16px] bg-primary px-[20px] py-[12px] text-white hover:bg-primary_dark"
