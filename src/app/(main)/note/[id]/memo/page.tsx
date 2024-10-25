@@ -14,6 +14,7 @@ import PlusIcon from '@/icons/plus-icon';
 import PencilIcon from '@/icons/pencil-icon';
 import editMemo from '@/apis/memo/edit-memo';
 import MemoBackground from '@/app/(main)/note/[id]/memo/memo-background';
+import deleteMemo from '@/apis/memo/delete-memo';
 
 function Memo() {
   const queryClient = useQueryClient();
@@ -92,6 +93,20 @@ function Memo() {
     },
   });
 
+  const { mutate: handleDeleteMemo } = useMutation({
+    mutationFn: () => deleteMemo(id, selectedMemoId),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['memoList', id], data);
+      setSelectedMemoId(data[0].toString());
+      handleGetMemo(data[0].toString());
+      setIsEditing(false);
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.error('Error: ', error);
+    },
+  });
+
   const handleEditButton = () => {
     if (!isEditing) {
       setIsEditing(true);
@@ -122,7 +137,7 @@ function Memo() {
                   onClick={selectMemo}
                 >
                   <div
-                    className={`${memoId.toString() === selectedMemoId ? 'bg-secondary_dark text-white' : 'bg-secondary_light text-secondary_dark'} text-subtitle1 flex h-[32px] w-[32px] items-center justify-center rounded-[12px]`}
+                    className={`${memoId.toString() === selectedMemoId ? 'bg-secondary_dark text-white' : 'bg-secondary_light text-secondary_dark'} text-subtitle1 flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-[12px]`}
                   >
                     {index + 1}
                   </div>
@@ -138,13 +153,17 @@ function Memo() {
             onClick={selectMemo}
           >
             <div
-              className={`${memoList[8].toString() === selectedMemoId ? 'bg-secondary_dark text-white' : 'bg-secondary_light text-secondary_dark'} text-subtitle1 flex h-[32px] w-[32px] items-center justify-center rounded-[12px]`}
+              className={`${memoList[8].toString() === selectedMemoId ? 'bg-secondary_dark text-white' : 'cursor-pointer bg-secondary_light text-secondary_dark'} text-subtitle1 flex h-[32px] w-[32px] items-center justify-center rounded-[12px]`}
             >
               9
             </div>
           </button>
         ) : (
-          <button type="button" className="flex h-[32px] w-[60px] justify-center" onClick={() => handleCreateMemo()}>
+          <button
+            type="button"
+            className="flex h-[32px] w-[60px] cursor-pointer justify-center"
+            onClick={() => handleCreateMemo()}
+          >
             <div className="text-subtitle1 flex h-[32px] w-[32px] items-center justify-center rounded-[12px] bg-secondary text-white">
               <PlusIcon />
             </div>
@@ -164,6 +183,20 @@ function Memo() {
         </div>
       )}
       <div className="z-10 flex h-[48px] w-[964px] justify-end ">
+        {memoList?.length !== 1 && (
+          <button
+            type="button"
+            onClick={() => {
+              // eslint-disable-next-line no-restricted-globals
+              const isConfirmed = confirm('정말로 삭제 하시겠습니까?');
+              if (isConfirmed) {
+                handleDeleteMemo();
+              }
+            }}
+          >
+            삭제
+          </button>
+        )}
         <button
           type="button"
           className="text-button flex h-[48px] w-[120px] items-center gap-[8px] rounded-[16px] bg-primary px-[20px] py-[12px] text-white hover:bg-primary_dark"
