@@ -135,7 +135,7 @@ function ChatRoom({ selectedChatRoomId }: { selectedChatRoomId: number }) {
                         </div>
                         <div
                           key={index2}
-                          className="mb-[8px] inline-block max-w-[416px] whitespace-normal break-words rounded-[16px] bg-gray1 px-[12px] py-[6px]"
+                          className="mb-[16px] inline-block max-w-[416px] whitespace-normal break-words rounded-[16px] bg-gray1 px-[12px] py-[6px]"
                         >
                           {isChatTyping &&
                           index1 === selectedChatRoom.chats.length - 1 &&

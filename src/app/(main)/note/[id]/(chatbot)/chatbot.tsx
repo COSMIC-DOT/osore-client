@@ -69,7 +69,7 @@ function ChatBot() {
   return (
     isChatBotRender && (
       <div
-        className={`chat-bot-backdrop ${isAnimaitionStart && 'chat-bot-open'} absolute right-0 flex h-[713px] w-[480px] flex-col gap-[12px] rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]`}
+        className={`chat-bot-backdrop z-20 ${isAnimaitionStart && 'chat-bot-open'} absolute right-0 flex h-[717px] w-[480px] flex-col gap-[12px] rounded-[32px] bg-white p-[20px] shadow-[0_0_30px_0_rgba(0,0,0,0.05)]`}
       >
         {isPending && <Loading />}
         <div>
@@ -100,7 +100,11 @@ function ChatBot() {
         {isChatRoom ? (
           <ChatRoom selectedChatRoomId={selectedChatRoomId} />
         ) : (
-          <ChatRoomList setIsChatRoom={setIsChatRoom} setSelectedChatRoomId={setSelectedChatRoomId} />
+          <ChatRoomList
+            selectedChatRoomId={selectedChatRoomId}
+            setIsChatRoom={setIsChatRoom}
+            setSelectedChatRoomId={setSelectedChatRoomId}
+          />
         )}
       </div>
     )
