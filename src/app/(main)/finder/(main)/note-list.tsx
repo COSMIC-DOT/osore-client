@@ -30,7 +30,7 @@ function NoteList() {
   const isLoading = getNoteListIsPending || deleteNoteIsPending;
 
   return (
-    <main className="relative flex w-[1440px] flex-col px-[80px] pb-[109px]">
+    <main className="relative flex w-[1441px] flex-col px-[80px] pb-[109px]">
       {isLoading && (
         <div className="absolute left-0 top-[-120px] z-50 flex h-[calc(100vh-120px)] w-full items-center justify-center">
           <Loading />
