@@ -24,6 +24,7 @@ function Memo() {
   const [selectedMemoId, setSelectedMemoId] = useState<string>('');
   const [memo, setMemo] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteButtonHover, setDeleteButtonHover] = useState(false);
   const [editedMemo, setEditedMemo] = useState('');
   const { data: memoList } = useQuery({
     queryKey: ['memoList', id],
@@ -187,7 +188,7 @@ function Memo() {
         {memoList?.length !== 1 && (
           <button
             type="button"
-            className="text-button flex h-[48px] w-[120px] items-center gap-[8px] rounded-[16px] bg-gray1 px-[20px] py-[12px] text-gray4 hover:bg-primary_dark"
+            className="text-button flex h-[48px] w-[120px] items-center gap-[8px] rounded-[16px] bg-gray1 px-[20px] py-[12px] text-gray4 hover:bg-primary_dark hover:text-white"
             onClick={() => {
               // eslint-disable-next-line no-restricted-globals
               const isConfirmed = confirm('정말로 삭제 하시겠습니까?');
@@ -195,8 +196,17 @@ function Memo() {
                 handleDeleteMemo();
               }
             }}
+            onMouseOver={() => {
+              setDeleteButtonHover(true);
+            }}
+            onFocus={() => {
+              setDeleteButtonHover(true);
+            }}
+            onMouseLeave={() => {
+              setDeleteButtonHover(false);
+            }}
           >
-            <DeleteIcon />
+            {deleteButtonHover ? <DeleteIcon color="white" /> : <DeleteIcon color="#6F717C" />}
             삭제하기
           </button>
         )}
