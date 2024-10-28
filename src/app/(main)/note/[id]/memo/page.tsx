@@ -12,6 +12,7 @@ import getMemo from '@/apis/memo/get-memo';
 import createMemo from '@/apis/memo/create-memo';
 import PlusIcon from '@/icons/plus-icon';
 import PencilIcon from '@/icons/pencil-icon';
+import DeleteIcon from '@/icons/delete-icon';
 import editMemo from '@/apis/memo/edit-memo';
 import MemoBackground from '@/app/(main)/note/[id]/memo/memo-background';
 import deleteMemo from '@/apis/memo/delete-memo';
@@ -182,10 +183,11 @@ function Memo() {
           <ReactMarkdown rehypePlugins={[rehypeHighlight, rehypeRaw]}>{memo}</ReactMarkdown>
         </div>
       )}
-      <div className="z-10 flex h-[48px] w-[964px] justify-end ">
+      <div className="z-10 flex h-[48px] w-[964px] justify-end gap-[20px]">
         {memoList?.length !== 1 && (
           <button
             type="button"
+            className="text-button flex h-[48px] w-[120px] items-center gap-[8px] rounded-[16px] bg-gray1 px-[20px] py-[12px] text-gray4 hover:bg-primary_dark"
             onClick={() => {
               // eslint-disable-next-line no-restricted-globals
               const isConfirmed = confirm('정말로 삭제 하시겠습니까?');
@@ -194,7 +196,8 @@ function Memo() {
               }
             }}
           >
-            삭제
+            <DeleteIcon />
+            삭제하기
           </button>
         )}
         <button
