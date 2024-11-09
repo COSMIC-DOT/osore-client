@@ -8,7 +8,7 @@ import GoogleLoginButton from './google-login-button';
 
 export default async function Home() {
   const cookie = cookies().get('JSESSIONID')?.value;
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/check`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_DOCKER_INTERNAL_URL}/api/auth/check`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
