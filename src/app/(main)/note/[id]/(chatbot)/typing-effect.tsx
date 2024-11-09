@@ -1,4 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
+
+function CustomParagraph({ node, ...props }: { node: { children: { type: string }[] } }) {
+  // eslint-disable-next-line react/jsx-props-no-spreading
+  return <p style={{ margin: 0 }} {...props} />;
+}
 
 function TypingEffect({
   text,
@@ -25,7 +34,7 @@ function TypingEffect({
         clearInterval(intervalId);
         setIsChatTyping(false);
       }
-    }, 50);
+    }, 30);
 
     return () => clearInterval(intervalId);
   }, [text]);
@@ -41,7 +50,17 @@ function TypingEffect({
     }
   }, [displayedText]);
 
-  return <div>{displayedText}</div>;
+  return (
+    <ReactMarkdown
+      rehypePlugins={[rehypeHighlight, rehypeRaw]}
+      components={{
+        // @ts-ignore
+        p: CustomParagraph,
+      }}
+    >
+      {displayedText}
+    </ReactMarkdown>
+  );
 }
 
 export default TypingEffect;

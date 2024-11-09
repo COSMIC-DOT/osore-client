@@ -38,18 +38,18 @@ function Explorer() {
     router.push(`/note/${id}/code/${fileId}`);
   };
 
+  console.log(rootFileList);
+
   useEffect(() => {
     if (rootFileList) {
       setFileList(rootFileList);
-      const isReadme = rootFileList.children.some(
-        (child) => (child.name === 'README' || child.name === 'readme') && child.extension === 'md',
-      );
+      const isReadme = rootFileList.children.some((child) => child.name === 'README' || child.name === 'readme');
 
       if (!isReadme) {
         router.replace(`/note/${id}`);
       } else {
         rootFileList.children.forEach((child) => {
-          if ((child.name === 'README' || child.name === 'readme') && child.extension === 'md') {
+          if (child.name === 'README' || child.name === 'readme') {
             router.replace(`/note/${id}/code/${child.id.toString()}`);
             setSelectedFileId(child.id);
           }
@@ -84,10 +84,12 @@ function Explorer() {
     return list?.children.map((child: FileType) => (
       <div>
         {child.type === 'file' ? (
-          <div className="flex h-[32px] items-center gap-[8px] rounded-[12px] pl-[24px] hover:bg-gray1">
-            <FileIcon />
+          <div className="flex h-[32px] w-[210px] min-w-[210px] items-center gap-[8px] rounded-[12px] pl-[24px] hover:bg-gray1">
+            <div className="min-w-[24px]">
+              <FileIcon />
+            </div>
             <div
-              className="text-body2 w-[calc(100%-8px)] truncate"
+              className="text-body2 truncate"
               data-value={child.id}
               onClick={openFile}
               onKeyDown={openFile}
@@ -102,7 +104,7 @@ function Explorer() {
             {child.isOpen ? (
               <div>
                 <div
-                  className="text-body2 flex h-[32px] select-none items-center gap-[8px] rounded-[12px] hover:bg-gray1"
+                  className="text-body2 flex h-[32px] w-[210px] min-w-[210px] select-none items-center gap-[8px] rounded-[12px] hover:bg-gray1"
                   ref={folderRef}
                   onClick={() => {
                     toggleFolder(child);
@@ -117,13 +119,13 @@ function Explorer() {
                     <ArrowDropdownIcon />
                     <OpenFolderIcon />
                   </div>
-                  <div className="text-body2 w-[calc(100%-8px)] truncate">{child.name}</div>
+                  <div className="text-body2 truncate">{child.name}</div>
                 </div>
                 <div className="pl-[24px]">{createFileTree(child)}</div>
               </div>
             ) : (
               <div
-                className="text-body2 flex h-[32px] select-none items-center gap-[8px] rounded-[12px] hover:bg-gray1"
+                className="text-body2 flex h-[32px] w-[210px] min-w-[210px] select-none items-center gap-[8px] rounded-[12px] hover:bg-gray1"
                 ref={folderRef}
                 onClick={() => {
                   toggleFolder(child);
@@ -138,7 +140,7 @@ function Explorer() {
                   <ArrowDropRightIcon />
                   <CloseFolderIcon />
                 </div>
-                <div className="text-body2 w-[calc(100%-8px)] truncate">{child.name}</div>
+                <div className="text-body2 truncate">{child.name}</div>
               </div>
             )}
           </div>
@@ -148,7 +150,7 @@ function Explorer() {
   }
 
   return (
-    <div className="mr-[12px] flex h-[717px] min-w-[252px] max-w-[252px] flex-col gap-[4px] overflow-y-scroll rounded-[28px] bg-white p-[20px] shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)] scrollbar-hide">
+    <div className="mr-[12px] flex h-[717px] min-w-[252px] max-w-[252px] flex-col gap-[4px] overflow-scroll rounded-[28px] bg-white p-[20px] shadow-[0px_0px_30px_0px_rgba(0,0,0,0.05)] scrollbar-hide">
       {createFileTree(fileList)}
     </div>
   );

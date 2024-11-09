@@ -1,19 +1,11 @@
 import { cookies } from 'next/headers';
-import { redirect, usePathname } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 import Header from './header';
 
-export default async function RootLayout({
-  children,
-  modal,
-  params,
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-  params: string;
-}) {
+export default async function RootLayout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
   const cookie = cookies().get('JSESSIONID')?.value;
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/check`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_DOCKER_INTERNAL_URL}/api/auth/check`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

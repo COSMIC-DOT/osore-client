@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
 
 import TypingEffect from '@/app/(main)/note/[id]/(chatbot)/typing-effect';
 import getUserName from '@/apis/auth/get-user-name';
@@ -12,6 +16,11 @@ import sendChat from '@/apis/chat/send-chat';
 import SendIcon from '@/icons/send-icon';
 import ChatRoomType from '@/types/chat-room-type';
 import OsoreDarkIcon from '@/icons/osore-dark-icon';
+
+function CustomParagraph({ node, ...props }: { node: { children: { type: string }[] } }) {
+  // eslint-disable-next-line react/jsx-props-no-spreading
+  return <p style={{ margin: 0 }} {...props} />;
+}
 
 function ChatRoom({ selectedChatRoomId }: { selectedChatRoomId: number }) {
   const queryClient = useQueryClient();
@@ -125,7 +134,15 @@ function ChatRoom({ selectedChatRoomId }: { selectedChatRoomId: number }) {
                         key={index2}
                         className="mb-[8px] inline-block max-w-[416px] whitespace-normal break-words rounded-[16px] bg-gray2 px-[12px] py-[6px]"
                       >
-                        {chatByDate.message}
+                        <ReactMarkdown
+                          rehypePlugins={[rehypeHighlight, rehypeRaw]}
+                          components={{
+                            // @ts-ignore
+                            p: CustomParagraph,
+                          }}
+                        >
+                          {chatByDate.message}
+                        </ReactMarkdown>
                       </div>
                     ) : (
                       <div className="w-[440px]">
@@ -147,7 +164,15 @@ function ChatRoom({ selectedChatRoomId }: { selectedChatRoomId: number }) {
                               chatContainerRef={chatContainerRef}
                             />
                           ) : (
-                            chatByDate.message
+                            <ReactMarkdown
+                              rehypePlugins={[rehypeHighlight, rehypeRaw]}
+                              components={{
+                                // @ts-ignore
+                                p: CustomParagraph,
+                              }}
+                            >
+                              {chatByDate.message}
+                            </ReactMarkdown>
                           )}
                         </div>
                       </div>
